@@ -1,54 +1,53 @@
+import 'dart:math';
+
 abstract class Attribute {
-  const Attribute(this.value);
+  const Attribute(this.points);
 
-  final int value;
+  final int points;
 
-  int get skillsPointCosts => (value / 5).ceil();
+  int get skillsPointCosts => max(1, (points / 5).ceil());
 
-  bool canBeIncremented(int skills) => skills > skillsPointCosts;
-
-  // ?
-  int operator -(int count) => value - count;
-  int operator +(int count) => value + count;
+  int operator -(int by) => points - by;
+  int operator +(int by) => points + by;
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Attribute && other.value == value;
+    return other is Attribute && other.points == points;
   }
 
   @override
-  int get hashCode => value.hashCode;
+  int get hashCode => points.hashCode;
 }
 
 class Health extends Attribute {
-  const Health(int value) : super(value);
+  const Health(int points) : super(points);
 
   @override
   int get skillsPointCosts => 1;
 
   @override
-  String toString() => 'Health($value)';
+  String toString() => 'Health($points)';
 }
 
 class Attack extends Attribute {
-  const Attack(int value) : super(value);
+  const Attack(int points) : super(points);
 
   @override
-  String toString() => 'Attack($value)';
+  String toString() => 'Attack($points)';
 }
 
 class Defense extends Attribute {
-  const Defense(int value) : super(value);
+  const Defense(int points) : super(points);
 
   @override
-  String toString() => 'Defense($value)';
+  String toString() => 'Defense($points)';
 }
 
 class Magik extends Attribute {
-  const Magik(int value) : super(value);
+  const Magik(int points) : super(points);
 
   @override
-  String toString() => 'Magik($value)';
+  String toString() => 'Magik($points)';
 }

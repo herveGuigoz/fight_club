@@ -1,31 +1,27 @@
-import 'dart:convert';
-
 import 'package:fight_club/src/modules/characters/logic/models/attributes.dart';
+import 'package:uuid/uuid.dart';
 
-class Character {
+/// Imutable data class
+abstract class Model {
+  const Model(this.id);
+
+  final String id;
+}
+
+class Character extends Model {
   Character({
+    String? id,
     this.level = 1,
     this.skills = 12,
-    this.health = const Health(10),
-    this.attack = const Attack(0),
-    this.defense = const Defense(0),
-    this.magik = const Magik(0),
-  });
-
-  factory Character.fromJson(String source) {
-    return Character.fromMap(json.decode(source));
-  }
-
-  factory Character.fromMap(Map<String, dynamic> map) {
-    return Character(
-      level: map['level'] as int,
-      skills: map['skills'] as int,
-      health: Health(map['health'] as int),
-      attack: Attack(map['attack'] as int),
-      defense: Defense(map['defense'] as int),
-      magik: Magik(map['magik'] as int),
-    );
-  }
+    int health = 10,
+    int attack = 0,
+    int defense = 0,
+    int magik = 0,
+  })  : health = Health(health),
+        attack = Attack(attack),
+        defense = Defense(defense),
+        magik = Magik(magik),
+        super(id ?? const Uuid().v4());
 
   final int level;
   final int skills;
@@ -36,61 +32,21 @@ class Character {
 
   List<Attribute> get attributes => [health, attack, defense, magik];
 
-  Attribute findAttribute<T extends Attribute>() {
-    if (!attributes.any((attribute) => attribute.typeOf<T>())) {
-      throw Exception('Attribute of type <$T> Not Found');
-    }
-    return attributes.firstWhere((attribute) => attribute.typeOf<T>());
-  }
-
-  String toJson() => json.encode(toMap());
-
-  Map<String, dynamic> toMap() {
-    return {
-      'level': level,
-      'skills': skills,
-      'health': health.value,
-      'attack': attack.value,
-      'defense': defense.value,
-      'magik': magik.value,
-    };
-  }
-
-  Character decrement(Attribute attribute) {
-    return copyWith(
-      skills: skills + attribute.skillsPointCosts, // todo: nop
-      health: attribute is Health ? Health(health.value - 1) : health,
-      attack: attribute is Attack ? Attack(attack.value - 1) : attack,
-      defense: attribute is Defense ? Defense(defense.value - 1) : defense,
-      magik: attribute is Magik ? Magik(magik.value - 1) : magik,
-    );
-  }
-
-  Character increment(Attribute attribute) {
-    return copyWith(
-      skills: skills - attribute.skillsPointCosts,
-      health: attribute is Health ? Health(health.value + 1) : health,
-      attack: attribute is Attack ? Attack(attack.value + 1) : attack,
-      defense: attribute is Defense ? Defense(defense.value + 1) : defense,
-      magik: attribute is Magik ? Magik(magik.value + 1) : magik,
-    );
-  }
-
   Character copyWith({
     int? level,
     int? skills,
-    Health? health,
-    Attack? attack,
-    Defense? defense,
-    Magik? magik,
+    int? health,
+    int? attack,
+    int? defense,
+    int? magik,
   }) {
     return Character(
       level: level ?? this.level,
       skills: skills ?? this.skills,
-      health: health ?? this.health,
-      attack: attack ?? this.attack,
-      defense: defense ?? this.defense,
-      magik: magik ?? this.magik,
+      health: health ?? this.health.points,
+      attack: attack ?? this.attack.points,
+      defense: defense ?? this.defense.points,
+      magik: magik ?? this.magik.points,
     );
   }
 
@@ -123,6 +79,26 @@ class Character {
   }
 }
 
-extension on Object {
-  bool typeOf<T>() => this is T;
+abstract class CharacterCodec {
+  static Map<String, dynamic> encode(Character character) {
+    return {
+      'level': character.level,
+      'skills': character.skills,
+      'health': character.health.points,
+      'attack': character.attack.points,
+      'defense': character.defense.points,
+      'magik': character.magik.points,
+    };
+  }
+
+  static Character decode(Map<String, dynamic> json) {
+    return Character(
+      level: json['level'] as int,
+      skills: json['skills'] as int,
+      health: json['health'] as int,
+      attack: json['attack'] as int,
+      defense: json['defense'] as int,
+      magik: json['magik'] as int,
+    );
+  }
 }

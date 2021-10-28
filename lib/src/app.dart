@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'modules/characters/characters.dart';
 import 'settings/settings_controller.dart';
 
 class FightClub extends ConsumerWidget {
@@ -44,7 +45,30 @@ class FightClub extends ConsumerWidget {
       //     },
       //   );
       // },
-      home: Container(),
+      home: const FakeCaractersList(),
+    );
+  }
+}
+
+class FakeCaractersList extends ConsumerWidget {
+  const FakeCaractersList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final characters = ref.watch(charactersProvider);
+
+    return Scaffold(
+      body: Column(
+        children: [
+          for (final character in characters)
+            ListTile(
+              title: Text(character.id),
+              onTap: () => Navigator.of(context).push(
+                CharacterLayout.route(character.id),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
