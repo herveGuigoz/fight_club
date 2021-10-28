@@ -5,6 +5,7 @@ class RayWorldGame extends FlameGame {
   @override
   Future<void> onLoad() async {
     add(Player());
+    super.onLoad();
   }
 }
 

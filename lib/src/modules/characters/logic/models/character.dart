@@ -1,3 +1,4 @@
+import 'package:fight_club/src/core/codecs/json_codec.dart';
 import 'package:fight_club/src/modules/characters/logic/models/attributes.dart';
 import 'package:uuid/uuid.dart';
 
@@ -79,19 +80,23 @@ class Character extends Model {
   }
 }
 
-abstract class CharacterCodec {
-  static Map<String, dynamic> encode(Character character) {
+class CharacterCodec extends JsonCodec<Character> {
+  const CharacterCodec();
+
+  @override
+  Map<String, dynamic> toMap(Character value) {
     return {
-      'level': character.level,
-      'skills': character.skills,
-      'health': character.health.points,
-      'attack': character.attack.points,
-      'defense': character.defense.points,
-      'magik': character.magik.points,
+      'level': value.level,
+      'skills': value.skills,
+      'health': value.health.points,
+      'attack': value.attack.points,
+      'defense': value.defense.points,
+      'magik': value.magik.points,
     };
   }
 
-  static Character decode(Map<String, dynamic> json) {
+  @override
+  Character fromMap(Map<String, dynamic> json) {
     return Character(
       level: json['level'] as int,
       skills: json['skills'] as int,

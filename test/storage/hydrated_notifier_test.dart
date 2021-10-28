@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:fight_club/src/storage/storage.dart';
+import 'package:fight_club/src/core/storage/storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';

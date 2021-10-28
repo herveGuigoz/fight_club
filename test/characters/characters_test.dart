@@ -50,6 +50,8 @@ void main() {
     });
 
     group('serialization', () {
+      const codec = CharacterCodec();
+
       final json = {
         'level': 7,
         'skills': 0,
@@ -60,7 +62,7 @@ void main() {
       };
 
       test('CharacterCodec decode correct value', () {
-        final character = CharacterCodec.decode(json);
+        final character = codec.fromMap(json);
 
         expect(character.level, equals(7));
         expect(character.skills, equals(0));
@@ -80,7 +82,7 @@ void main() {
           magik: 8,
         );
 
-        expect(CharacterCodec.encode(character), equals(json));
+        expect(codec.toMap(character), equals(json));
       });
     });
 

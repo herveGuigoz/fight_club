@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'modules/authentication/authentication.dart';
 import 'modules/characters/characters.dart';
 import 'settings/settings_controller.dart';
 

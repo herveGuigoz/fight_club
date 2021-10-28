@@ -1,4 +1,4 @@
-import 'package:fight_club/src/storage/hydrated_storage.dart';
+import 'package:fight_club/src/core/storage/hydrated_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
