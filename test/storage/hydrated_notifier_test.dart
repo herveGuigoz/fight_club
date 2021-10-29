@@ -5,6 +5,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
 
+import '../helpers/helpers.dart';
+
 class MockStorage extends Mock implements Storage {}
 
 class MyUuidHydratedLogic extends HydratedStateNotifier<String> {
@@ -35,7 +37,9 @@ class MyCallbackHydratedLogic extends HydratedStateNotifier<int> {
 }
 
 class MyHydratedLogic extends HydratedStateNotifier<int> {
-  MyHydratedLogic([this._id]) : super(0);
+  MyHydratedLogic([
+    this._id,
+  ]) : super(0);
 
   final String? _id;
 
@@ -66,17 +70,32 @@ class MyMultiHydratedStateNotifier extends HydratedStateNotifier<int> {
   int? fromJson(dynamic json) => json['value'] as int?;
 }
 
+class ErrorListener extends Mock {
+  void call(Object? error, StackTrace? stackTrace);
+}
+
+class MyErrorLogic extends HydratedStateNotifier<int> {
+  MyErrorLogic() : super(0);
+
+  void increment() => state = state + 1;
+
+  @override
+  Map<String, String> toJson(int state) {
+    throw Exception('_toJson_');
+  }
+
+  @override
+  int? fromJson(Map<String, dynamic> json) {
+    throw Exception('_fromJson_');
+  }
+}
+
 void main() {
   group('HydratedLogic', () {
     late Storage storage;
 
     setUp(() {
-      storage = MockStorage();
-      when(() => storage.write(any(), any<dynamic>())).thenAnswer((_) async {});
-      when<dynamic>(() => storage.read(any())).thenReturn(<String, dynamic>{});
-      when(() => storage.delete(any())).thenAnswer((_) async {});
-      when(() => storage.clear()).thenAnswer((_) async {});
-      HydratedStateNotifier.storage = storage;
+      storage = setUpStorage();
     });
 
     test('reads from storage once upon initialization', () {
@@ -297,6 +316,15 @@ void main() {
         final dynamic initialStateB = secondCaptured.first;
 
         expect(initialStateB, cachedState);
+      });
+    });
+
+    group('MyErrorLogic', () {
+      test('call onError', () {
+        final listener = ErrorListener();
+        final logic = MyErrorLogic()..onError = listener;
+        logic.increment();
+        verify(() => listener.call(any(), any())).called(1);
       });
     });
   });

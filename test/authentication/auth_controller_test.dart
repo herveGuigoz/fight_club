@@ -1,6 +1,5 @@
 import 'package:fight_club/src/modules/authentication/authentication.dart';
 import 'package:fight_club/src/modules/characters/characters.dart';
-import 'package:fight_club/src/core/storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

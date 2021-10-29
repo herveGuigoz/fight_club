@@ -44,7 +44,7 @@ mixin HydratedMixin<State> on StateNotifier<State> {
         storage.write(storageToken, stateJson).then((_) {}, onError: onError);
       }
     } catch (error, stackTrace) {
-      doOnError(error, stackTrace);
+      onError?.call(error, stackTrace);
     }
   }
 
@@ -60,7 +60,7 @@ mixin HydratedMixin<State> on StateNotifier<State> {
 
       return _state ??= super.state;
     } catch (error, stackTrace) {
-      doOnError(error, stackTrace);
+      onError?.call(error, stackTrace);
       _state = super.state;
       return super.state;
     }
@@ -75,7 +75,7 @@ mixin HydratedMixin<State> on StateNotifier<State> {
         storage.write(storageToken, stateJson).then((_) {}, onError: onError);
       }
     } catch (error, stackTrace) {
-      doOnError(error, stackTrace);
+      onError?.call(error, stackTrace);
     }
     _state = value;
     super.state = value;
@@ -95,8 +95,6 @@ mixin HydratedMixin<State> on StateNotifier<State> {
   ///
   /// If [toJson] returns `null`, then no state changes will be persisted.
   Map<String, dynamic>? toJson(State state);
-
-  void doOnError(dynamic error, StackTrace stackTrace) {}
 }
 
 /// Exception thrown if there was no [HydratedStorage] specified.

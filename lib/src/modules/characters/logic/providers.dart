@@ -3,8 +3,10 @@ import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final characterProvider =
-    AutoDisposeStateNotifierProviderFamily<CharacterLogic, Character, String>(
+    AutoDisposeStateNotifierProviderFamily<CharacterLogic, Character, String?>(
   (ref, characterId) => CharacterLogic(
-    ref.read(charactersProvider).firstWhere((el) => el.id == characterId),
+    character: ref
+        .read(charactersProvider)
+        .firstWhere((el) => el.id == characterId, orElse: () => Character()),
   ),
 );

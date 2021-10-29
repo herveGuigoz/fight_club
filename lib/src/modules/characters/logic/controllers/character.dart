@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // todo: then keep map<Type, List<Attribute>> on Character to allow dismiss
 // todo: attribute
 class CharacterLogic extends StateNotifier<Character> {
-  CharacterLogic(Character state) : super(state);
+  CharacterLogic({Character? character}) : super(character ?? Character());
 
   static bool canBeIncremented(Character character, Attribute attribute) {
     return attribute.skillsPointCosts <= character.skills;
