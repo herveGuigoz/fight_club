@@ -1,9 +1,9 @@
 SF:lib/src/core/codecs/json_codec.dart
-DA:4,9
-DA:10,0
-DA:11,0
-DA:14,0
-DA:15,0
+DA:4,11
+DA:10,1
+DA:11,2
+DA:14,1
+DA:15,2
 DA:18,2
 DA:19,8
 DA:22,1
@@ -12,7 +12,7 @@ DA:24,3
 DA:25,1
 DA:26,1
 LF:12
-LH:8
+LH:12
 end_of_record
 SF:lib/src/core/storage/hydrated_notifier.dart
 DA:10,6
@@ -45,7 +45,7 @@ DA:80,3
 DA:81,3
 DA:87,4
 DA:99,1
-DA:105,8
+DA:105,9
 DA:107,1
 LF:32
 LH:30
@@ -103,7 +103,7 @@ DA:33,3
 DA:38,2
 DA:40,2
 DA:41,6
-DA:47,11
+DA:47,12
 DA:53,3
 DA:56,3
 DA:57,1
@@ -160,7 +160,7 @@ DA:76,3
 DA:77,3
 DA:78,3
 DA:79,2
-DA:84,9
+DA:84,10
 DA:86,3
 DA:88,3
 DA:89,3
