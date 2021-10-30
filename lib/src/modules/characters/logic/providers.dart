@@ -10,3 +10,6 @@ final characterProvider =
         .firstWhere((el) => el.id == characterId, orElse: () => Character()),
   ),
 );
+
+// todo
+final didUpdateAttributeProvider = Provider.autoDispose((red) {});

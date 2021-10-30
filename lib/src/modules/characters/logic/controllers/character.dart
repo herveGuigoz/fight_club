@@ -1,9 +1,6 @@
 import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// todo: order price and current price on Attribute.
-// todo: then keep map<Type, List<Attribute>> on Character to allow dismiss
-// todo: attribute
 class CharacterLogic extends StateNotifier<Character> {
   CharacterLogic({Character? character}) : super(character ?? Character());
 

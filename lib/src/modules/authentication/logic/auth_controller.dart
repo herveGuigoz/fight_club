@@ -16,6 +16,24 @@ class AuthController extends AuthService {
 
     state = state.copyWith(characters: [...state.characters, character]);
   }
+
+  void updateCharacter(Character character) {
+    assertCharacterExistInState(character);
+    state = state.copyWith(characters: state.characters.replace(character));
+  }
+
+  void removeCharacter(Character character) {
+    assertCharacterExistInState(character);
+    state = state.copyWith(characters: state.characters.delete(character));
+  }
+
+  @protected
+  @visibleForTesting
+  void assertCharacterExistInState(Character character) {
+    if (!state.characters.any((element) => element.id == character.id)) {
+      throw CharacterNotFoundException(character);
+    }
+  }
 }
 
 /// A service that stores and retrieves auth info.
@@ -43,6 +61,7 @@ abstract class AuthService extends HydratedStateNotifier<Session> {
   }
 }
 
+/// Store auth informations
 class Session {
   const Session({
     this.characters = const [],
@@ -76,5 +95,29 @@ class CharactersLengthLimitException implements Exception {
   @override
   String toString() {
     return 'Maximum $kCharactersLengthLimit characters per player is allowed';
+  }
+}
+
+class CharacterNotFoundException implements Exception {
+  CharacterNotFoundException(this.character);
+
+  final Character character;
+
+  @override
+  String toString() {
+    return 'Could not find any character with id ${character.id}';
+  }
+}
+
+extension ListExtension<T extends Model> on List<T> {
+  bool matchId(T oldItem, T newItem) => oldItem.id == newItem.id;
+
+  List<T> replace(T newItem) {
+    return map((oldItem) => matchId(oldItem, newItem) ? oldItem : newItem)
+        .toList();
+  }
+
+  List<T> delete(T newItem) {
+    return where((oldItem) => !matchId(oldItem, newItem)).toList();
   }
 }
