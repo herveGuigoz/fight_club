@@ -9,3 +9,7 @@ final authProvider = StateNotifierProvider<AuthController, Session>((ref) {
 final charactersProvider = Provider<List<Character>>((ref) {
   return ref.watch(authProvider).characters;
 });
+
+final hasCharactersProvider = Provider(
+  (ref) => ref.watch(authProvider).characters.isNotEmpty,
+);

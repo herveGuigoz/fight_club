@@ -7,10 +7,10 @@ import '../helpers/helpers.dart';
 
 void main() {
   group('Character controller', () {
-    group('increment', () {
+    group('upgrade', () {
       final caracter = Character();
       late ProviderContainer container;
-      late CharacterLogic controller;
+      late CharacterController controller;
 
       setUp(() {
         container = createContainer(
@@ -22,31 +22,31 @@ void main() {
       });
 
       test('health skill', () {
-        controller.increment(caracter.health);
+        controller.upgrade(caracter.health);
         final updatedCharacter = container.read(characterProvider(caracter.id));
-        expect(updatedCharacter.health.points, equals(11));
-        expect(updatedCharacter.skills, equals(11));
+        expect(updatedCharacter.character.health.points, equals(11));
+        expect(updatedCharacter.character.skills, equals(11));
       });
 
       test('attack skill', () {
-        controller.increment(caracter.attack);
+        controller.upgrade(caracter.attack);
         final updatedCharacter = container.read(characterProvider(caracter.id));
-        expect(updatedCharacter.attack.points, equals(1));
-        expect(updatedCharacter.skills, equals(11));
+        expect(updatedCharacter.character.attack.points, equals(1));
+        expect(updatedCharacter.character.skills, equals(11));
       });
 
       test('defense skill', () {
-        controller.increment(caracter.defense);
+        controller.upgrade(caracter.defense);
         final updatedCharacter = container.read(characterProvider(caracter.id));
-        expect(updatedCharacter.defense.points, equals(1));
-        expect(updatedCharacter.skills, equals(11));
+        expect(updatedCharacter.character.defense.points, equals(1));
+        expect(updatedCharacter.character.skills, equals(11));
       });
 
       test('magik skill', () {
-        controller.increment(caracter.magik);
+        controller.upgrade(caracter.magik);
         final updatedCharacter = container.read(characterProvider(caracter.id));
-        expect(updatedCharacter.magik.points, equals(1));
-        expect(updatedCharacter.skills, equals(11));
+        expect(updatedCharacter.character.magik.points, equals(1));
+        expect(updatedCharacter.character.skills, equals(11));
       });
     });
     group('providers', () {
@@ -84,8 +84,8 @@ void main() {
           expect(
             () => container
                 .read(characterProvider(character.id).notifier)
-                .increment(character.magik),
-            throwsA(isA<CharacterLogicException>()),
+                .upgrade(character.magik),
+            throwsA(isA<CharacterUpgradeException>()),
           );
         },
       );
@@ -97,9 +97,9 @@ void main() {
       final character = Character();
 
       expect(
-        CharacterLogicException(character, character.attack).toString(),
-        'Could not increment ${character.attack} on $character.'
-        'Ensure that character has enought skills to increment this value:'
+        CharacterUpgradeException(character, character.attack).toString(),
+        'Could not upgrade ${character.attack} on $character.'
+        'Ensure that character has enought skills to upgrade this value:'
         'Increasing 1 point costs ${character.attack.skillsPointCosts} skills amount',
       );
     });

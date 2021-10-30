@@ -6,6 +6,8 @@ import 'package:fight_club/src/core/storage/storage.dart';
 const kCharactersStorageKey = '_characters_';
 const kCharactersLengthLimit = 10;
 
+/// A class that many Widgets can interact with to read, update, or listen to
+/// [Session] changes.
 class AuthController extends AuthService {
   AuthController();
 
@@ -42,8 +44,10 @@ abstract class AuthService extends HydratedStateNotifier<Session> {
     this.codec = const CharacterCodec(),
   }) : super(const Session());
 
+  // Session's encoder/decoder
   final CharacterCodec codec;
 
+  /// Loads [Session] from local storage.
   @override
   Session? fromJson(Map<String, dynamic> json) {
     if (json.containsKey(kCharactersStorageKey)) {
@@ -53,6 +57,7 @@ abstract class AuthService extends HydratedStateNotifier<Session> {
     }
   }
 
+  /// Persists [Session] to local storage.
   @override
   Map<String, dynamic>? toJson(Session state) {
     return {
@@ -61,7 +66,7 @@ abstract class AuthService extends HydratedStateNotifier<Session> {
   }
 }
 
-/// Store auth informations
+/// Auth informations
 class Session {
   const Session({
     this.characters = const [],
@@ -109,6 +114,7 @@ class CharacterNotFoundException implements Exception {
   }
 }
 
+/// Utilities to interact with [List] of [Model]
 extension ListExtension<T extends Model> on List<T> {
   bool matchId(T oldItem, T newItem) => oldItem.id == newItem.id;
 

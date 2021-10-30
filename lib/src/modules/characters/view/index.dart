@@ -2,44 +2,66 @@ import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:path_to_regexp/path_to_regexp.dart';
 
-class CharacterLayout extends ConsumerWidget {
-  const CharacterLayout({
+class EditCharacterView extends StatelessWidget {
+  const EditCharacterView({
     Key? key,
     required this.caracterId,
   }) : super(key: key);
 
   final String caracterId;
 
-  static Route route(String caracterId) {
-    return MaterialPageRoute<void>(
-      builder: (_) => CharacterLayout(caracterId: caracterId),
+  static const routeName = '/character/:id';
+  static String path(String id) => pathToFunction(routeName).call({'id': id});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: EditCharacterLayout(caracterId: caracterId),
     );
   }
+}
+
+class EditCharacterLayout extends ConsumerWidget {
+  const EditCharacterLayout({
+    Key? key,
+    this.caracterId,
+  }) : super(key: key);
+
+  final String? caracterId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final character = ref.watch(characterProvider(caracterId));
+    final character = ref.watch(characterProvider(caracterId)).character;
 
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0), // todo theme
-        child: Column(
-          children: [
-            Text('Skills: ${character.skills}'), // todo theme
-            const Gap(16),
-            for (final attribute in character.attributes)
-              AttributeListTile(
-                character: character,
-                attribute: attribute,
-                onTap: CharacterLogic.canBeIncremented(character, attribute)
-                    ? () => ref
-                        .read(characterProvider(caracterId).notifier)
-                        .increment(attribute)
-                    : null,
+    return Padding(
+      padding: const EdgeInsets.all(16.0), // todo theme
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Skill points available: ${character.skills}'), // todo theme
+          const Gap(16),
+          for (final attribute in character.attributes)
+            AttributeListTile(
+              character: character,
+              attribute: attribute,
+              onTap: CharacterController.canBeUpgraded(character, attribute)
+                  ? () => ref.upgrade(attribute, caracterId: caracterId)
+                  : null,
+            ),
+          const Spacer(),
+          ButtonBar(
+            children: [
+              TextButton(
+                onPressed: () {
+                  ref.refresh(characterProvider(caracterId).notifier);
+                },
+                child: const Text('RESET'),
               ),
-          ],
-        ),
+            ],
+          )
+        ],
       ),
     );
   }
@@ -68,7 +90,7 @@ class AttributeListTile extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text('${attribute.runtimeType}'),
+            child: Text('${attribute.runtimeType}'), // todo attribute.name
           ),
           Expanded(
             child: Center(

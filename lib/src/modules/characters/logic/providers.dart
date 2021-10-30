@@ -2,14 +2,15 @@ import 'package:fight_club/src/modules/authentication/authentication.dart';
 import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final characterProvider =
-    AutoDisposeStateNotifierProviderFamily<CharacterLogic, Character, String?>(
-  (ref, characterId) => CharacterLogic(
+// todo: use currentCharacterProvider
+final characterProvider = AutoDisposeStateNotifierProviderFamily<
+    CharacterController, CharacterChanges, String?>(
+  (ref, characterId) => CharacterController(
     character: ref
         .read(charactersProvider)
         .firstWhere((el) => el.id == characterId, orElse: () => Character()),
   ),
 );
 
-// todo
-final didUpdateAttributeProvider = Provider.autoDispose((red) {});
+/// the currently selected character
+final currentCharacterProvider = StateProvider((ref) => Character());
