@@ -1,13 +1,7 @@
-import 'package:fight_club/src/core/codecs/json_codec.dart';
-import 'package:fight_club/src/modules/characters/logic/models/attributes.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
-/// Imutable data class
-abstract class Model {
-  const Model(this.id);
-
-  final String id;
-}
+import 'package:fight_club/src/core/data/models/models.dart';
 
 class Character extends Model {
   Character({
@@ -18,6 +12,7 @@ class Character extends Model {
     int attack = 0,
     int defense = 0,
     int magik = 0,
+    this.fights = const [],
   })  : health = Health(health),
         attack = Attack(attack),
         defense = Defense(defense),
@@ -30,8 +25,19 @@ class Character extends Model {
   final Attack attack;
   final Defense defense;
   final Magik magik;
+  final List<Fight> fights;
 
   List<Attribute> get attributes => [health, attack, defense, magik];
+
+  Fight? get lastFight {
+    if (fights.isNotEmpty) {
+      return (fights..sort((a, b) => a.date.compareTo(b.date))).last;
+    }
+  }
+
+  bool didLoosedInLast24hours() {
+    return lastFight?.date.isBefore(DateTime.now()) ?? false;
+  }
 
   Character copyWith({
     int? level,
@@ -40,6 +46,7 @@ class Character extends Model {
     int? attack,
     int? defense,
     int? magik,
+    List<Fight>? fights,
   }) {
     return Character(
       level: level ?? this.level,
@@ -48,12 +55,33 @@ class Character extends Model {
       attack: attack ?? this.attack.points,
       defense: defense ?? this.defense.points,
       magik: magik ?? this.magik.points,
+      fights: fights ?? this.fights,
     );
   }
 
   @override
   String toString() {
     return 'Character(level: $level, skills: $skills, attributes: $health, $attack, $defense, $magik)';
+  }
+
+  Character operator +(Attribute attribute) {
+    return copyWith(
+      skills: skills - attribute.skillsPointCosts,
+      health: attribute is Health ? health + 1 : health.points,
+      attack: attribute is Attack ? attack + 1 : attack.points,
+      defense: attribute is Defense ? defense + 1 : defense.points,
+      magik: attribute is Magik ? magik + 1 : magik.points,
+    );
+  }
+
+  Character operator -(Attribute attribute) {
+    return copyWith(
+      skills: skills + attribute.skillsPointCosts,
+      health: attribute is Health ? health - 1 : health.points,
+      attack: attribute is Attack ? attack - 1 : attack.points,
+      defense: attribute is Defense ? defense - 1 : defense.points,
+      magik: attribute is Magik ? magik - 1 : magik.points,
+    );
   }
 
   @override
@@ -66,7 +94,8 @@ class Character extends Model {
         other.health == health &&
         other.attack == attack &&
         other.defense == defense &&
-        other.magik == magik;
+        other.magik == magik &&
+        listEquals(other.fights, fights);
   }
 
   @override
@@ -76,36 +105,7 @@ class Character extends Model {
         health.hashCode ^
         attack.hashCode ^
         defense.hashCode ^
-        magik.hashCode;
-  }
-}
-
-class CharacterCodec extends JsonCodec<Character> {
-  const CharacterCodec();
-
-  @override
-  Map<String, dynamic> toMap(Character value) {
-    return {
-      'id': value.id,
-      'level': value.level,
-      'skills': value.skills,
-      'health': value.health.points,
-      'attack': value.attack.points,
-      'defense': value.defense.points,
-      'magik': value.magik.points,
-    };
-  }
-
-  @override
-  Character fromMap(Map<String, dynamic> json) {
-    return Character(
-      id: json['id'] as String,
-      level: json['level'] as int,
-      skills: json['skills'] as int,
-      health: json['health'] as int,
-      attack: json['attack'] as int,
-      defense: json['defense'] as int,
-      magik: json['magik'] as int,
-    );
+        magik.hashCode ^
+        fights.hashCode;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:fight_club/src/modules/authentication/authentication.dart';
 import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -54,8 +55,8 @@ void main() {
         final container = createContainer(
           overrides: [charactersProvider.overrideWithValue([])],
         );
-        final character = container.read(characterProvider(null));
-        expect(character, isA<Character>());
+        final state = container.read(characterProvider(null));
+        expect(state.character, isA<Character>());
       });
 
       test('find character by ids', () {
@@ -66,7 +67,7 @@ void main() {
           ],
         );
         expect(
-          container.read(characterProvider(character.id)).hashCode,
+          container.read(characterProvider(character.id)).character.hashCode,
           equals(character.hashCode),
         );
       });

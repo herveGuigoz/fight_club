@@ -9,6 +9,10 @@ abstract class Attribute {
 
   int operator -(int by) => points - by;
   int operator +(int by) => points + by;
+  bool operator >(Attribute other) => points > other.points;
+  bool operator >=(Attribute other) => points >= other.points;
+  bool operator <(Attribute other) => points < other.points;
+  bool operator <=(Attribute other) => points <= other.points;
 
   @override
   bool operator ==(Object other) {

@@ -1,3 +1,4 @@
+import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -66,9 +67,6 @@ class EditCharacterLayout extends ConsumerWidget {
             AttributeListTile(
               character: character,
               attribute: attribute,
-              onTap: CharacterController.canBeUpgraded(character, attribute)
-                  ? () => ref.upgrade(attribute, caracterId: caracterId)
-                  : null,
             ),
           const Spacer(),
           ButtonBar(
@@ -91,17 +89,33 @@ class EditCharacterLayout extends ConsumerWidget {
   }
 }
 
-class AttributeListTile extends StatelessWidget {
+class AttributeListTile extends ConsumerStatefulWidget {
   const AttributeListTile({
     Key? key,
     required this.character,
     required this.attribute,
-    this.onTap,
   }) : super(key: key);
 
   final Character character;
   final Attribute attribute;
-  final VoidCallback? onTap;
+
+  @override
+  ConsumerState<AttributeListTile> createState() => _AttributeListTileState();
+}
+
+class _AttributeListTileState extends ConsumerState<AttributeListTile> {
+  late final initialAttribute = widget.attribute;
+
+  Character get character => widget.character;
+  Attribute get attribute => widget.attribute;
+
+  bool get canBeDowngraded {
+    return initialAttribute != attribute;
+  }
+
+  bool get canBeUpgraded {
+    return CharacterController.canBeUpgraded(character, attribute);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,11 +128,15 @@ class AttributeListTile extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text('${attribute.runtimeType}'), // todo attribute.name
+            child: Text(
+              '${widget.attribute.runtimeType}', // todo attribute.label
+            ), // todo attribute.name
           ),
           Expanded(
             child: Center(
-              child: Text(attribute.points.toString()), // todo theme
+              child: Text(
+                widget.attribute.points.toString(),
+              ), // todo theme
             ),
           ),
           Expanded(
@@ -126,11 +144,19 @@ class AttributeListTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  onPressed: onTap,
+                  onPressed: canBeDowngraded
+                      ? () => ref.downgrade(widget.attribute)
+                      : null,
+                  icon: const Icon(Icons.remove), // todo theme
+                ),
+                IconButton(
+                  onPressed: canBeUpgraded
+                      ? () => ref.upgrade(widget.attribute)
+                      : null,
                   icon: const Icon(Icons.add), // todo theme
                 ),
                 Text(
-                  '- ${attribute.skillsPointCosts} skills',
+                  '- ${widget.attribute.skillsPointCosts} skills',
                   style: theme.textTheme.caption, // todo theme
                 )
               ],

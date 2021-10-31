@@ -1,9 +1,11 @@
-import 'package:fight_club/src/modules/characters/characters.dart';
+import 'package:fight_club/src/core/codecs/codecs.dart';
+import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Characters', () {
+    const codec = CharacterCodec();
     group('attributes', () {
       final character = Character();
       final attributes = character.attributes;
@@ -50,36 +52,38 @@ void main() {
     });
 
     group('serialization', () {
-      const codec = CharacterCodec();
-
       final json = {
+        'id': 'id',
         'level': 7,
         'skills': 0,
         'health': 10,
         'attack': 9,
         'defense': 4,
         'magik': 8,
+        'fights': [],
       };
 
       test('CharacterCodec decode correct value', () {
         final character = codec.fromMap(json);
-
         expect(character.level, equals(7));
         expect(character.skills, equals(0));
         expect(character.health.points, equals(10));
         expect(character.attack.points, equals(9));
         expect(character.defense.points, equals(4));
         expect(character.magik.points, equals(8));
+        expect(character.fights, equals([]));
       });
 
       test('CharacterCodec format correct json', () {
         final character = Character(
+          id: 'id',
           level: 7,
           skills: 0,
           health: 10,
           attack: 9,
           defense: 4,
           magik: 8,
+          fights: [],
         );
 
         expect(codec.toMap(character), equals(json));

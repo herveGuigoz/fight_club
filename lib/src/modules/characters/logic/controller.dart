@@ -1,7 +1,6 @@
+import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:fight_club/src/modules/characters/characters.dart';
 
 /// Logic for editing charater's attributes.
 /// Attribute could be upgraded by one only if has enought skills points.
@@ -11,34 +10,19 @@ class CharacterController extends StateNotifier<CharacterChanges> {
     required Character character,
   }) : super(CharacterChanges(character));
 
-  @protected
-  Health get health => state.character.health;
-  @protected
-  Attack get attack => state.character.attack;
-  @protected
-  Defense get defense => state.character.defense;
-  @protected
-  Magik get magik => state.character.magik;
-
   static bool canBeUpgraded(Character character, Attribute attribute) {
     return attribute.skillsPointCosts <= character.skills;
   }
 
-  void downgrade(Attribute attribute) {
-    if (!state.changes.contains(attribute)) {
-      throw CharacterDowngradeException(state.character, attribute);
+  void downgrade(Attribute value) {
+    if (!state.changes.any((el) => el.sameTypeAs(value))) {
+      throw CharacterDowngradeException(state.character, value);
     }
 
-    final character = state.character.copyWith(
-      skills: state.character.skills + attribute.skillsPointCosts,
-      health: attribute is Health ? health - 1 : health.points,
-      attack: attribute is Attack ? attack - 1 : attack.points,
-      defense: attribute is Defense ? defense - 1 : defense.points,
-      magik: attribute is Magik ? magik - 1 : magik.points,
-    );
+    final attribute = state.changes.where((el) => el.sameTypeAs(value)).last;
 
     state = state.copyWith(
-      character: character,
+      character: state.character - attribute,
       changes: [...state.changes]..remove(attribute),
     );
   }
@@ -48,16 +32,8 @@ class CharacterController extends StateNotifier<CharacterChanges> {
       throw CharacterUpgradeException(state.character, attribute);
     }
 
-    final character = state.character.copyWith(
-      skills: state.character.skills - attribute.skillsPointCosts,
-      health: attribute is Health ? health + 1 : health.points,
-      attack: attribute is Attack ? attack + 1 : attack.points,
-      defense: attribute is Defense ? defense + 1 : defense.points,
-      magik: attribute is Magik ? magik + 1 : magik.points,
-    );
-
     state = state.copyWith(
-      character: character,
+      character: state.character + attribute,
       changes: [...state.changes, attribute],
     );
   }
@@ -119,4 +95,8 @@ class CharacterDowngradeException implements Exception {
         'This is most likely because any attribute of type'
         '${attribute.runtimeType} where previously upgraded.';
   }
+}
+
+extension on Attribute {
+  bool sameTypeAs(Attribute other) => runtimeType == other.runtimeType;
 }

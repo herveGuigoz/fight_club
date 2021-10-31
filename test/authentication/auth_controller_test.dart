@@ -1,5 +1,6 @@
+import 'package:fight_club/src/core/codecs/codecs.dart';
+import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:fight_club/src/modules/authentication/authentication.dart';
-import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -7,19 +8,18 @@ import '../helpers/helpers.dart';
 
 void main() {
   group('Auth controller', () {
-    const codec = CharacterCodec();
-
+    const codec = SessionCodec();
     test('Read state from cache', () {
-      final characters = [Character(level: 10)];
-      final storage = setUpStorage(onRead: {
-        kCharactersStorageKey: codec.encodeList(characters),
-      });
+      final session = Session(
+        characters: [Character(level: 10)],
+      );
+      final storage = setUpStorage(onRead: codec.toMap(session));
 
       final container = createContainer();
-      final session = container.read(authProvider);
+      final expected = container.read(authProvider);
 
       verify(() => storage.read(any())).called(1);
-      expect(session.characters, equals(characters));
+      expect(session, equals(expected));
     });
 
     test('Add new character to state', () {
@@ -36,17 +36,16 @@ void main() {
       final storage = setUpStorage();
       final container = createContainer();
       container.read(authProvider.notifier).addNewCharacter(Character());
-      verify(() => storage.write(any(), any())).called(2);
+      verify(() => storage.write(any(), any())).called(1);
     });
 
     test(
       'should throw CharactersLengthLimitException when exceed 10 characters',
       () {
         final characters = List.generate(10, (_) => Character());
+        final session = Session(characters: characters);
 
-        setUpStorage(onRead: {
-          kCharactersStorageKey: codec.encodeList(characters),
-        });
+        setUpStorage(onRead: codec.toMap(session));
 
         final container = createContainer();
         final controller = container.read(authProvider.notifier);

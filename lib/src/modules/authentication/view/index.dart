@@ -1,7 +1,6 @@
+import 'package:fight_club/src/app.dart';
 import 'package:fight_club/src/modules/authentication/authentication.dart';
 import 'package:fight_club/src/modules/characters/characters.dart';
-import 'package:fight_club/src/modules/lobby/lobby.dart';
-import 'package:fight_club/src/modules/navigation/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,7 +16,8 @@ class OnboardingPage extends ConsumerWidget {
       body: EditCharacterLayout(
         onSave: (character) {
           ref.read(authProvider.notifier).addNewCharacter(character);
-          ref.read(routerProvider).go(CaractersListView.routeName);
+          Navigator.of(context).pushNamed(Home.routeName);
+          // ref.read(routerProvider).go(CaractersListView.routeName);
         },
       ),
     );
