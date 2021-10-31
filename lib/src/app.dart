@@ -29,33 +29,30 @@ class FightClub extends ConsumerWidget {
       theme: ThemeData(),
       darkTheme: ThemeData.dark(),
       themeMode: ref.watch(settingsProvider),
+      // onGenerateRoute: (RouteSettings routeSettings) {
+      //   return MaterialPageRoute<void>(
+      //     settings: routeSettings,
+      //     builder: (BuildContext context) {
+      //       final location = routeSettings.name;
+      //       final params = routeSettings.arguments;
+
+      //       final goingToOnboarding = location == OnboardingPage.routeName;
+      //       if (!goingToOnboarding && !ref.read(hasCharactersProvider)) {
+      //         return const OnboardingPage();
+      //       }
+
+      //       switch (location) {
+      //         case OnboardingPage.routeName:
+      //           return const OnboardingPage();
+      //         case LobbyPage.routeName:
+      //         default:
+      //           return const LobbyPage();
+      //       }
+      //     },
+      //   );
+      // },
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
     );
   }
 }
-
-// class CaractersList extends ConsumerWidget {
-//   const CaractersList({Key? key}) : super(key: key);
-
-//   static const routeName = '/characters';
-
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final characters = ref.watch(charactersProvider);
-
-//     return Scaffold(
-//       body: Column(
-//         children: [
-//           for (final character in characters)
-//             ListTile(
-//               title: Text(character.id),
-//               onTap: () {
-//                 ref.read(routerProvider).go(EditCharacterLayout.path(character.id));
-//               },
-//             ),
-//         ],
-//       ),
-//     );
-//   }
-// }

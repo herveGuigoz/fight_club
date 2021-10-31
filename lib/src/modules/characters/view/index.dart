@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:path_to_regexp/path_to_regexp.dart';
 
+typedef OnSave = void Function(Character character);
+
 class EditCharacterView extends StatelessWidget {
   const EditCharacterView({
     Key? key,
@@ -27,9 +29,11 @@ class EditCharacterLayout extends ConsumerWidget {
   const EditCharacterLayout({
     Key? key,
     this.caracterId,
+    this.onSave,
   }) : super(key: key);
 
   final String? caracterId;
+  final OnSave? onSave;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,6 +62,10 @@ class EditCharacterLayout extends ConsumerWidget {
                   ref.refresh(characterProvider(caracterId).notifier);
                 },
                 child: const Text('RESET'),
+              ),
+              TextButton(
+                onPressed: () => onSave?.call(character),
+                child: const Text('SAVE'),
               ),
             ],
           )

@@ -86,6 +86,7 @@ class CharacterCodec extends JsonCodec<Character> {
   @override
   Map<String, dynamic> toMap(Character value) {
     return {
+      'id': value.id,
       'level': value.level,
       'skills': value.skills,
       'health': value.health.points,
@@ -98,6 +99,7 @@ class CharacterCodec extends JsonCodec<Character> {
   @override
   Character fromMap(Map<String, dynamic> json) {
     return Character(
+      id: json['id'] as String,
       level: json['level'] as int,
       skills: json['skills'] as int,
       health: json['health'] as int,

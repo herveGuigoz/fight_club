@@ -1,5 +1,6 @@
 import 'package:fight_club/src/modules/authentication/authentication.dart';
 import 'package:fight_club/src/modules/characters/characters.dart';
+import 'package:fight_club/src/modules/loby/loby.dart';
 import 'package:fight_club/src/modules/navigation/pages.dart';
 import 'package:fight_club/src/modules/navigation/transition.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,18 +8,31 @@ import 'package:go_router/go_router.dart';
 
 final routerProvider = Provider((ref) {
   return GoRouter(
+    initialLocation: OnboardingPage.routeName,
     routes: [
       GoRoute(
-        path: OnboardingView.routeName,
+        path: OnboardingPage.routeName,
+        redirect: (state) {
+          if (ref.read(hasCharactersProvider)) {
+            return LobbyPage.routeName;
+          }
+        },
         pageBuilder: (context, state) => FadeTransitionPage<void>(
           key: state.pageKey,
-          child: const OnboardingView(),
+          child: const OnboardingPage(),
+        ),
+      ),
+      GoRoute(
+        path: LobbyPage.routeName,
+        pageBuilder: (context, state) => FadeTransitionPage<void>(
+          key: state.pageKey,
+          child: const LobbyPage(),
         ),
       ),
       GoRoute(
         path: EditCharacterView.routeName,
         redirect: (state) {
-          if (state.params['id'] == null) return OnboardingView.routeName;
+          if (state.params['id'] == null) return OnboardingPage.routeName;
         },
         pageBuilder: (context, state) => FadeTransitionPage<void>(
           key: state.pageKey,
@@ -26,12 +40,6 @@ final routerProvider = Provider((ref) {
         ),
       )
     ],
-    redirect: (state) {
-      final goingToOnboarding = state.location == OnboardingView.routeName;
-      if (!goingToOnboarding && !ref.read(hasCharactersProvider)) {
-        return OnboardingView.routeName;
-      }
-    },
     errorPageBuilder: (context, state) => FadeTransitionPage<void>(
       child: DefaultNotFoundPage(path: state.location),
     ),

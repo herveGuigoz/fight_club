@@ -79,7 +79,9 @@ class HydratedStorage implements Storage {
   }
 
   @override
-  dynamic read(String key) => _box.isOpen ? _box.get(key) : null;
+  dynamic read(String key) {
+    return _box.isOpen ? _box.get(key) : null;
+  }
 
   @override
   Future<void> write(String key, dynamic value) async {

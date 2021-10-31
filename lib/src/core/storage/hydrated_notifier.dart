@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fight_club/src/core/storage/hydrated_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,9 +55,9 @@ mixin HydratedMixin<State> on StateNotifier<State> {
     final storage = HydratedStateNotifier.storage;
     if (_state != null) return _state!;
     try {
-      final stateJson = storage.read(storageToken) as Map<String, dynamic>?;
+      final stateJson = storage.read(storageToken) as Map<dynamic, dynamic>?;
       if (stateJson != null) {
-        _state = fromJson(stateJson);
+        _state = fromJson(stateJson.cast<String, dynamic>());
       }
 
       return _state ??= super.state;

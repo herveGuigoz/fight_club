@@ -47,6 +47,9 @@ abstract class AuthService extends HydratedStateNotifier<Session> {
   // Session's encoder/decoder
   final CharacterCodec codec;
 
+  @override
+  void hydrate() {/* do not persist the initial state to storage on start */}
+
   /// Loads [Session] from local storage.
   @override
   Session? fromJson(Map<String, dynamic> json) {
