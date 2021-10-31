@@ -1,6 +1,6 @@
 import 'package:fight_club/src/modules/authentication/authentication.dart';
 import 'package:fight_club/src/modules/characters/characters.dart';
-import 'package:fight_club/src/modules/loby/loby.dart';
+import 'package:fight_club/src/modules/lobby/lobby.dart';
 import 'package:fight_club/src/modules/navigation/pages.dart';
 import 'package:fight_club/src/modules/navigation/transition.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,7 +14,7 @@ final routerProvider = Provider((ref) {
         path: OnboardingPage.routeName,
         redirect: (state) {
           if (ref.read(hasCharactersProvider)) {
-            return LobbyPage.routeName;
+            return CaractersListView.routeName;
           }
         },
         pageBuilder: (context, state) => FadeTransitionPage<void>(
@@ -23,17 +23,28 @@ final routerProvider = Provider((ref) {
         ),
       ),
       GoRoute(
-        path: LobbyPage.routeName,
+        path: CaractersListView.routeName,
         pageBuilder: (context, state) => FadeTransitionPage<void>(
           key: state.pageKey,
-          child: const LobbyPage(),
+          child: const CaractersListView(),
+        ),
+      ),
+      GoRoute(
+        path: FightView.routeName,
+        pageBuilder: (context, state) => FadeTransitionPage<void>(
+          key: state.pageKey,
+          child: const FightView(),
+        ),
+      ),
+      GoRoute(
+        path: CreateCharacterView.routeName,
+        pageBuilder: (context, state) => FadeTransitionPage<void>(
+          key: state.pageKey,
+          child: const CreateCharacterView(),
         ),
       ),
       GoRoute(
         path: EditCharacterView.routeName,
-        redirect: (state) {
-          if (state.params['id'] == null) return OnboardingPage.routeName;
-        },
         pageBuilder: (context, state) => FadeTransitionPage<void>(
           key: state.pageKey,
           child: EditCharacterView(caracterId: state.params['id']!),

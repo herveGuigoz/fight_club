@@ -6,6 +6,21 @@ import 'package:path_to_regexp/path_to_regexp.dart';
 
 typedef OnSave = void Function(Character character);
 
+class CreateCharacterView extends StatelessWidget {
+  const CreateCharacterView({
+    Key? key,
+  }) : super(key: key);
+
+  static const routeName = '/characters/create';
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: EditCharacterLayout(),
+    );
+  }
+}
+
 class EditCharacterView extends StatelessWidget {
   const EditCharacterView({
     Key? key,
@@ -20,6 +35,7 @@ class EditCharacterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: EditCharacterLayout(caracterId: caracterId),
     );
   }
