@@ -20,13 +20,15 @@ class CaractersController {
   }
 
   Future<Character> findOpponentFor(Character character) async {
-    /// list of random characters.
+    /// List of random characters.
     final characters = await getRandomCharacters();
 
-    /// Remove characters who loosed a fight in past 24 hours.
+    /// The character has to be free (it must not have fight in the past hour)
+    // todo throw exception if empty
     final availableCharacters = characters
-        .where((character) => !character.didLoosedInLast24hours())
+        .where((character) => !character.didFightInPastHour())
         .toList();
+    if (availableCharacters.isUnique) return availableCharacters.first;
 
     // Take the closest opponent based on rank value
     final closestOpponentByLevel = availableCharacters.getClosestOpponents(

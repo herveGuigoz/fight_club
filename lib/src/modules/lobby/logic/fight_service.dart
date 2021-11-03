@@ -68,7 +68,9 @@ class FightService {
       diceResult: diceResult,
       damages: damages,
       attacker: attacker,
-      defender: defender.copyWith(health: defender.health.points - damages),
+      defender: defender.copyWith(
+        health: math.max(0, defender.health.points - damages),
+      ),
     );
   }
 

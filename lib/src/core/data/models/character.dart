@@ -35,8 +35,18 @@ class Character extends Model {
     }
   }
 
+  bool didFightInPastHour() {
+    final oneHourAgo = DateTime.now().subtract(const Duration(hours: 1));
+
+    return lastFight?.date.isAfter(oneHourAgo) ?? false;
+  }
+
   bool didLoosedInLast24hours() {
-    return lastFight?.date.isBefore(DateTime.now()) ?? false;
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    if (lastFight?.date.isAfter(yesterday) ?? false) {
+      return !lastFight!.result.won;
+    }
+    return false;
   }
 
   Character copyWith({

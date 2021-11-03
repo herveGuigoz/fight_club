@@ -137,31 +137,66 @@ class FightResultPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final textTheme = Theme.of(context).textTheme;
     final fightResult = ref.watch(fightResultProvider);
 
     return Scaffold(
+      // todo: 'you loose/win!' on AppBar
       appBar: AppBar(title: const Text('Fight result')),
       body: fightResult.when(
         data: (result) => ListView(
+          padding: const EdgeInsets.all(16),
           children: [
-            Text("Result: ${result.won ? 'win' : 'loss'}"),
-            const Gap(16),
-            Row(
-              children: const [Text('You'), Text('opponent')],
+            Text(
+              "Result: ${result.won ? 'You win' : 'You loss'}",
+              style: textTheme.headline6,
             ),
-            for (final round in result.rounds) ...[
-              Text('Round: ${round.id}'),
-              Row(
-                children: [
-                  Text('Attack: ${round.attacker.attack.points}'),
-                  Text('Attack: ${round.defender.attack.points}'),
-                ],
+            const Divider(),
+            for (final round in result.rounds)
+              ListTile(
+                tileColor: round.damages > 0
+                    ? round.id.isOdd
+                        ? Colors.green[300]
+                        : Colors.red[300]
+                    : null,
+                dense: true,
+                leading: Text(
+                  'Round ${round.id}:',
+                  style: textTheme.caption,
+                ),
+                title: RichText(
+                  text: TextSpan(
+                    text: '${round.diceResult} -> ',
+                    style: textTheme.caption,
+                    children: [
+                      TextSpan(
+                        text: round.id.isOdd
+                            ? round.damages > 0
+                                ? 'Boom! Opponent loosed ${round.damages} health points.'
+                                : 'You missed your attack'
+                            : round.damages > 0
+                                ? 'Oouch! You loosed ${round.damages} health points.'
+                                : 'Opponent missed his attack',
+                        style: textTheme.caption,
+                      ),
+                    ],
+                  ),
+                ),
+                trailing: Text(
+                  round.id.isOdd
+                      ? '${round.attacker.health.points} : ${round.defender.health.points}'
+                      : '${round.defender.health.points} : ${round.attacker.health.points}',
+                  style: textTheme.caption,
+                ),
               )
-            ]
           ],
         ),
-        error: (error, _, __) => Center(child: Text(error.toString())),
-        loading: (_) => const Center(child: CircularProgressIndicator()),
+        error: (error, _, __) => Center(
+          child: Text(error.toString()),
+        ),
+        loading: (_) => const Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
   }
