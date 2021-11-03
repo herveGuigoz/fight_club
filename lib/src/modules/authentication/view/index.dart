@@ -12,7 +12,9 @@ class OnboardingPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Fight Club')),
+      appBar: AppBar(
+        title: Text('Fight Club', style: Theme.of(context).textTheme.headline4),
+      ),
       body: EditCharacterLayout(
         onSave: (character) {
           ref.read(authProvider.notifier).addNewCharacter(character);

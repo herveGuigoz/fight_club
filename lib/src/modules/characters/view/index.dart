@@ -155,10 +155,6 @@ class _AttributeListTileState extends ConsumerState<AttributeListTile> {
                       : null,
                   icon: const Icon(Icons.add), // todo theme
                 ),
-                Text(
-                  '- ${widget.attribute.skillsPointCosts} skills',
-                  style: theme.textTheme.caption, // todo theme
-                )
               ],
             ),
           )

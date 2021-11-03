@@ -4,8 +4,8 @@ import 'package:fight_club/src/modules/lobby/logic/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-
-import 'modules/settings/settings.dart';
+import 'package:path_icon/path_icon.dart';
+import 'package:theme/theme.dart';
 
 typedef Router = Route<dynamic>? Function(RouteSettings);
 
@@ -41,9 +41,11 @@ class FightClub extends ConsumerWidget {
       restorationScopeId: 'app',
       debugShowCheckedModeBanner: false,
       supportedLocales: const [Locale('en', '')],
-      theme: ThemeData(),
-      darkTheme: ThemeData.dark(),
-      themeMode: ref.watch(settingsProvider),
+      // theme: ThemeData(),
+      // darkTheme: ThemeData.dark(),
+      // themeMode: ref.watch(settingsProvider),
+      theme: AppThemeData.dark,
+      darkTheme: AppThemeData.dark,
       onGenerateRoute: ref.watch(router),
     );
   }
@@ -56,17 +58,59 @@ class Home extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        mini: true,
+        onPressed: () {},
+        child: PathIcon(PathIcons.add),
+      ),
       appBar: AppBar(title: const Text('Characters')),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          OutlinedButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(LobbyPage.routeName);
-            },
-            child: const Text('Lobby'),
+      body: Wrap(
+        runSpacing: 8,
+        children: <PathIconData>[
+          PathIcons.anonymous,
+          PathIcons.bender,
+          PathIcons.brutus,
+          PathIcons.buzzLightyear,
+          PathIcons.frankensteins,
+          PathIcons.homer,
+          PathIcons.ninja,
+          PathIcons.stormtrooper,
+          PathIcons.walterWhite,
+          PathIcons.yoda,
+        ]
+            .map((e) => Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: PathIcon(e, size: 80),
+                ))
+            .toList(),
+      ),
+      // body: Column(
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      //   crossAxisAlignment: CrossAxisAlignment.stretch,
+      //   children: [
+      //     OutlinedButton(
+      //       onPressed: () {
+      //         Navigator.of(context).pushNamed(LobbyPage.routeName);
+      //       },
+      //       child: const Text('Lobby'),
+      //     ),
+      //   ],
+      // ),
+      bottomNavigationBar: BottomNavigationBar(
+        mouseCursor: SystemMouseCursors.grab,
+        selectedLabelStyle: theme.textTheme.caption,
+        unselectedLabelStyle: theme.textTheme.caption,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: PathIcon(PathIcons.users),
+            label: 'Characters',
+          ),
+          BottomNavigationBarItem(
+            icon: PathIcon(PathIcons.battle),
+            label: 'Fights',
           ),
         ],
       ),
