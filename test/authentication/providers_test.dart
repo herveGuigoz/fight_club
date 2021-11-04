@@ -10,9 +10,9 @@ void main() {
       test('return new characters', () {
         setUpStorage();
         final container = createContainer();
-        expect(container.read(charactersProvider), isEmpty);
+        expect(container.read(userCharactersProvider), isEmpty);
         container.read(authProvider.notifier).addNewCharacter(Character());
-        expect(container.read(charactersProvider), isNotEmpty);
+        expect(container.read(userCharactersProvider), isNotEmpty);
       });
     });
   });

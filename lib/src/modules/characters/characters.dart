@@ -1,4 +1,5 @@
-export 'logic/providers.dart';
 export 'logic/controller.dart';
-export 'view/index.dart';
-export 'logic/actions.dart';
+export 'logic/providers.dart';
+
+export 'views/character_edit_page.dart';
+export 'views/characters_list_page.dart';

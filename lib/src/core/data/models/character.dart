@@ -6,6 +6,7 @@ import 'package:fight_club/src/core/data/models/models.dart';
 class Character extends Model {
   Character({
     String? id,
+    this.name = 'Anonymous',
     this.level = 1,
     this.skills = 12,
     int health = 10,
@@ -19,6 +20,7 @@ class Character extends Model {
         magik = Magik(magik),
         super(id ?? const Uuid().v4());
 
+  final String name;
   final int level;
   final int skills;
   final Health health;
@@ -35,21 +37,16 @@ class Character extends Model {
     }
   }
 
-  bool didFightInPastHour() {
+  bool didLooseFightInPastHour() {
     final oneHourAgo = DateTime.now().subtract(const Duration(hours: 1));
+    final didFight = lastFight?.date.isAfter(oneHourAgo) ?? false;
 
-    return lastFight?.date.isAfter(oneHourAgo) ?? false;
-  }
-
-  bool didLoosedInLast24hours() {
-    final yesterday = DateTime.now().subtract(const Duration(days: 1));
-    if (lastFight?.date.isAfter(yesterday) ?? false) {
-      return !lastFight!.result.won;
-    }
-    return false;
+    return didFight && !lastFight!.didWin(this);
   }
 
   Character copyWith({
+    String? id,
+    String? name,
     int? level,
     int? skills,
     int? health,
@@ -59,6 +56,8 @@ class Character extends Model {
     List<Fight>? fights,
   }) {
     return Character(
+      id: id ?? this.id,
+      name: name ?? this.name,
       level: level ?? this.level,
       skills: skills ?? this.skills,
       health: health ?? this.health.points,
@@ -71,7 +70,7 @@ class Character extends Model {
 
   @override
   String toString() {
-    return 'Character(level: $level, skills: $skills, attributes: $health, $attack, $defense, $magik)';
+    return 'Character(name: $name, level: $level, skills: $skills, attributes: $health, $attack, $defense, $magik, fights: $fights)';
   }
 
   Character operator +(Attribute attribute) {
@@ -85,8 +84,9 @@ class Character extends Model {
   }
 
   Character operator -(Attribute attribute) {
+    final previousAttribute = attribute.copyWith(points: attribute.points - 1);
     return copyWith(
-      skills: skills + attribute.skillsPointCosts,
+      skills: skills + previousAttribute.skillsPointCosts,
       health: attribute is Health ? health - 1 : health.points,
       attack: attribute is Attack ? attack - 1 : attack.points,
       defense: attribute is Defense ? defense - 1 : defense.points,
@@ -99,6 +99,7 @@ class Character extends Model {
     if (identical(this, other)) return true;
 
     return other is Character &&
+        other.name == name &&
         other.level == level &&
         other.skills == skills &&
         other.health == health &&
@@ -110,7 +111,8 @@ class Character extends Model {
 
   @override
   int get hashCode {
-    return level.hashCode ^
+    return name.hashCode ^
+        level.hashCode ^
         skills.hashCode ^
         health.hashCode ^
         attack.hashCode ^

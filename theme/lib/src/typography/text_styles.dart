@@ -34,6 +34,7 @@ class AppTextStyle {
     color: Colors.white,
     decoration: TextDecoration.none,
     fontWeight: AppFontWeight.regular,
+    textBaseline: TextBaseline.alphabetic,
   );
 
   /// Headline 1 Text Style

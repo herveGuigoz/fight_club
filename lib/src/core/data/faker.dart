@@ -6,10 +6,7 @@ import 'package:fight_club/src/core/data/random_generator.dart';
 class Faker {
   /// Generates a fake [Fight].
   static Fight fight() {
-    return Fight(
-      date: Random.datetime(),
-      result: FightResult(won: Random.boolean(), rounds: []),
-    );
+    return Fight(date: Random.datetime());
   }
 
   /// Generates new list of fake characters.
@@ -24,21 +21,12 @@ class Faker {
   }
 
   /// Generates a fake [Character].
-  static Character character({int maxFightsCount = 100}) {
-    // create fake fights
-    final fights = List.generate(
-      Random.integer(maxFightsCount, min: 1),
-      (_) => fight(),
-    );
-
+  static Character character({int maxFightsCount = 50}) {
     // compute number of wins
-    final wins = fights.fold<int>(
-      0,
-      (count, fight) => fight.result.won ? count + 1 : count,
-    );
+    final wins = Random.integer(maxFightsCount);
 
     // compute number of losses
-    final losses = fights.length - wins;
+    final losses = maxFightsCount - wins;
 
     // compute overall number of skills
     int skillsCount = 12 + wins;
@@ -56,13 +44,28 @@ class Faker {
     }
 
     return Character(
+      // Characters are created on second isolate and path icons are only
+      // available on root isolate so we can't call Avatar.all here to generate
+      // random name.
+      name: Random.element([
+        'Anonymous',
+        'Bender',
+        'Brutus',
+        'Buzz Lightyear',
+        'Frankensteins',
+        'Homer',
+        'Ninja',
+        'Stormtrooper',
+        'Walter White',
+        'Yoda'
+      ]),
       level: math.max(1, wins - losses),
       skills: 0,
       health: attributes['health'] as int,
       attack: attributes['attack'] as int,
       defense: attributes['defense'] as int,
       magik: attributes['magik'] as int,
-      fights: fights,
+      fights: [],
     );
   }
 }

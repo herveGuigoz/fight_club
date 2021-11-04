@@ -7,55 +7,74 @@ class Fight extends Model {
   Fight({
     String? id,
     required this.date,
-    required this.result,
+    this.rounds = const [],
   }) : super(id ?? const Uuid().v4());
 
   final DateTime date;
-  final FightResult result;
+  final List<Round> rounds;
 
-  Fight copyWith({DateTime? date, FightResult? result}) {
-    return Fight(date: date ?? this.date, result: result ?? this.result);
+  // List<Character> get characters {
+  //   return rounds.fold([], (array, round) {
+  //     if (!array.contains(round.attacker)) array.add(round.attacker);
+
+  //     return array;
+  //   });
+  // }
+
+  bool didWin(Character character) {
+    if (rounds.isEmpty) return false;
+    return rounds.last.attacker.id == character.id;
+  }
+
+  Fight copyWith({DateTime? date, List<Round>? rounds}) {
+    return Fight(date: date ?? this.date, rounds: rounds ?? this.rounds);
   }
 
   @override
-  String toString() => 'Fight(date: $date, result: $result)';
+  String toString() => 'Fight(date: $date)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Fight && other.date == date && other.result == result;
+    return other is Fight &&
+        other.date == date &&
+        listEquals(other.rounds, rounds);
   }
 
   @override
-  int get hashCode => date.hashCode ^ result.hashCode;
+  int get hashCode => date.hashCode ^ rounds.hashCode;
 }
 
 class FightResult {
   FightResult({
-    required this.won,
-    required this.rounds,
+    required this.character,
+    required this.opponent,
+    required this.didWin,
+    required this.fight,
   });
 
-  final bool won;
-  final List<Round> rounds;
-
-  FightResult copyWith({bool? won, List<Round>? rounds}) {
-    return FightResult(won: won ?? this.won, rounds: rounds ?? this.rounds);
-  }
-
-  @override
-  String toString() => 'FightResult(won: $won, rounds: $rounds)';
+  final Character character;
+  final Character opponent;
+  final bool didWin;
+  final Fight fight;
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
     return other is FightResult &&
-        other.won == won &&
-        listEquals(other.rounds, rounds);
+        other.character == character &&
+        other.opponent == opponent &&
+        other.didWin == didWin &&
+        other.fight == fight;
   }
 
   @override
-  int get hashCode => won.hashCode ^ rounds.hashCode;
+  int get hashCode {
+    return character.hashCode ^
+        opponent.hashCode ^
+        didWin.hashCode ^
+        fight.hashCode;
+  }
 }

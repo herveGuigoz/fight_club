@@ -26,7 +26,7 @@ class CaractersController {
     /// The character has to be free (it must not have fight in the past hour)
     // todo throw exception if empty
     final availableCharacters = characters
-        .where((character) => !character.didFightInPastHour())
+        .where((character) => !character.didLooseFightInPastHour())
         .toList();
     if (availableCharacters.isUnique) return availableCharacters.first;
 

@@ -4,8 +4,8 @@ import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class OnboardingPage extends ConsumerWidget {
-  const OnboardingPage({Key? key}) : super(key: key);
+class OnboardingView extends ConsumerWidget {
+  const OnboardingView({Key? key}) : super(key: key);
 
   static const routeName = '/sign-up';
 
@@ -13,13 +13,14 @@ class OnboardingPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fight Club', style: Theme.of(context).textTheme.headline4),
+        title: const Text('Create your avatar'),
       ),
       body: EditCharacterLayout(
         onSave: (character) {
           ref.read(authProvider.notifier).addNewCharacter(character);
-          Navigator.of(context).pushNamed(Home.routeName);
-          // ref.read(routerProvider).go(CaractersListView.routeName);
+          WidgetsBinding.instance!.addPostFrameCallback((_) {
+            Navigator.of(context).pushReplacementNamed(Home.routeName);
+          });
         },
       ),
     );

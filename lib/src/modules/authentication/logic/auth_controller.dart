@@ -1,5 +1,7 @@
+import 'dart:math';
+
 import 'package:fight_club/src/core/codecs/session_codec.dart';
-import 'package:flutter/foundation.dart';
+import 'package:fight_club/src/modules/lobby/logic/fight_observer.dart';
 
 import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:fight_club/src/core/storage/storage.dart';
@@ -8,7 +10,7 @@ const kCharactersLengthLimit = 10;
 
 /// A class that many Widgets can interact with to read, update, or listen to
 /// [Session] changes.
-class AuthController extends AuthService {
+class AuthController extends AuthService implements FightObserver {
   AuthController();
 
   void addNewCharacter(Character character) {
@@ -20,24 +22,27 @@ class AuthController extends AuthService {
   }
 
   void updateCharacter(Character character) {
-    assertCharacterExistInState(character);
     state = state.copyWith(
-      characters: state.characters.replace(character).toList(),
+      characters: state.characters.replace(character),
     );
   }
 
   void removeCharacter(Character character) {
-    assertCharacterExistInState(character);
     state = state.copyWith(
-      characters: state.characters.delete(character).toList(),
+      characters: state.characters.delete(character),
     );
   }
 
-  @visibleForTesting
-  void assertCharacterExistInState(Character character) {
-    if (!state.characters.any((element) => element.id == character.id)) {
-      throw CharacterNotFoundException(character);
-    }
+  @override
+  void didFight(Character character, Fight fight) {
+    final didWin = fight.didWin(character);
+    updateCharacter(
+      character.copyWith(
+        skills: didWin ? character.skills + 1 : character.skills,
+        level: didWin ? character.level + 1 : max(1, character.level - 1),
+        fights: [...character.fights, fight],
+      ),
+    );
   }
 }
 

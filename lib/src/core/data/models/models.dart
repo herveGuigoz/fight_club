@@ -13,13 +13,24 @@ abstract class Model {
 
 /// Utilities to interact with Iterable of [Model]
 extension IterableExtension<T extends Model> on Iterable<T> {
-  bool matchId(T oldItem, T newItem) => oldItem.id == newItem.id;
+  List<T> replace(T newItem) {
+    final models = <T>[];
 
-  Iterable<T> replace(T newItem) {
-    return map((oldItem) => matchId(oldItem, newItem) ? oldItem : newItem);
+    for (final item in this) {
+      item.id == newItem.id ? models.add(newItem) : models.add(item);
+    }
+
+    return models;
   }
 
-  Iterable<T> delete(T newItem) {
-    return where((oldItem) => !matchId(oldItem, newItem));
+  List<T> delete(T newItem) {
+    final models = <T>[];
+
+    for (final item in this) {
+      if (item.id == newItem.id) continue;
+      models.add(item);
+    }
+
+    return models;
   }
 }

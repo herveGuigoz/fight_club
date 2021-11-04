@@ -2,20 +2,34 @@ import 'dart:math' as math;
 
 import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:fight_club/src/core/data/random_generator.dart';
+import 'package:fight_club/src/modules/lobby/logic/fight_observer.dart';
 import 'package:flutter/foundation.dart';
 
 class FightService {
+  FightService({
+    this.observers = const [],
+  });
+
+  final List<FightObserver> observers;
+
   @visibleForTesting
   static Dice dice = const Dice();
 
   /// Run fight in isolate.
   /// @throw FightException if both characters can't win.
-  Future<FightResult> launchFight(Character user, Character opponent) async {
+  Future<Fight> launchFight(Character user, Character opponent) async {
     assertAtLeastOneCharacterCanWin(user, opponent);
 
     final rounds = await compute(processFight, IsolateEntry(user, opponent));
 
-    return FightResult(won: rounds.last.id.isOdd, rounds: rounds);
+    final fight = Fight(date: DateTime.now(), rounds: rounds);
+
+    for (final observer in observers) {
+      observer.didFight(user, fight);
+      observer.didFight(opponent, fight);
+    }
+
+    return fight;
   }
 
   @visibleForTesting

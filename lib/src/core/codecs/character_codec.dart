@@ -10,6 +10,7 @@ class CharacterCodec extends JsonCodec<Character> {
   Character fromMap(Map<String, dynamic> json) {
     return Character(
       id: json['id'] as String,
+      name: json['name'] as String,
       level: json['level'] as int,
       skills: json['skills'] as int,
       health: json['health'] as int,
@@ -24,6 +25,7 @@ class CharacterCodec extends JsonCodec<Character> {
   Map<String, dynamic> toMap(Character value) {
     return {
       'id': value.id,
+      'name': value.name,
       'level': value.level,
       'skills': value.skills,
       'health': value.health.points,

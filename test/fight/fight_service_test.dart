@@ -168,7 +168,7 @@ void main() {
           Character(attack: 5, defense: 1),
         );
 
-        expect(result.won, isTrue);
+        expect(result.didWin, isTrue);
       });
 
       test('FightResult.won is false when user loose', () async {
@@ -177,7 +177,7 @@ void main() {
           Character(attack: 10, defense: 10),
         );
 
-        expect(result.won, isFalse);
+        expect(result.didWin, isFalse);
       });
     });
   });
