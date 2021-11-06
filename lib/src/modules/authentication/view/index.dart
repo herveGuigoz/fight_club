@@ -1,4 +1,5 @@
 import 'package:fight_club/src/app.dart';
+import 'package:fight_club/src/core/data/models/character.dart';
 import 'package:fight_club/src/modules/authentication/authentication.dart';
 import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,9 @@ class OnboardingView extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Create your avatar'),
       ),
-      body: EditCharacterLayout(
+      body: CharacterLayout(
+        mode: Mode.create,
+        character: Character(),
         onSave: (character) {
           ref.read(authProvider.notifier).addNewCharacter(character);
           WidgetsBinding.instance!.addPostFrameCallback((_) {

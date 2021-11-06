@@ -12,14 +12,6 @@ final userCharactersProvider = Provider<List<Character>>(
   name: 'userCharactersProvider',
 );
 
-final userCharacterProvider = Provider.family.autoDispose<Character, String>(
-  (ref, id) {
-    final characters = ref.watch(userCharactersProvider);
-    return characters.firstWhere((character) => character.id == id);
-  },
-  name: 'userCharacterProvider',
-);
-
 final availableCharactersProvider = Provider<Iterable<Character>>(
   (ref) {
     final characters = ref.watch(userCharactersProvider);
@@ -33,4 +25,9 @@ final availableCharactersProvider = Provider<Iterable<Character>>(
 final hasCharactersProvider = Provider(
   (ref) => ref.watch(authProvider).characters.isNotEmpty,
   name: 'hasCharactersProvider',
+);
+
+final isCharacterCreationAllowedProvider = Provider(
+  (ref) => ref.watch(userCharactersProvider).length < kCharactersLengthLimit,
+  name: 'isCharacterCreationAllowedProvider',
 );

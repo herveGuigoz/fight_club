@@ -4,10 +4,18 @@ import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:path_to_regexp/path_to_regexp.dart';
 import 'package:theme/theme.dart';
 
 typedef OnSave = void Function(Character character);
+
+enum Mode { create, update }
+
+// todo
+final attributesDidChangeProvider = Provider(
+  (ref) => false,
+  dependencies: [characterControllerProvider],
+  name: 'attributesDidChangeProvider',
+);
 
 class CreateCharacterView extends ConsumerWidget {
   const CreateCharacterView({
@@ -28,7 +36,11 @@ class CreateCharacterView extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Create your avatar'),
       ),
-      body: EditCharacterLayout(
+      body: CharacterLayout(
+        mode: Mode.create,
+        character: Character(
+          name: ref.read(avatarsProvider).first.name,
+        ),
         onSave: (character) {
           ref.read(authProvider.notifier).addNewCharacter(character);
           Navigator.of(context).pop(character);
@@ -38,7 +50,7 @@ class CreateCharacterView extends ConsumerWidget {
   }
 }
 
-class EditCharacterView extends StatelessWidget {
+class EditCharacterView extends ConsumerWidget {
   const EditCharacterView({
     Key? key,
     required this.character,
@@ -46,28 +58,38 @@ class EditCharacterView extends StatelessWidget {
 
   final Character character;
 
-  static const routeName = '/character/:id';
-  static String path(String id) => pathToFunction(routeName).call({'id': id});
+  static Route<void> route(Character character) {
+    return MaterialPageRoute<void>(
+      builder: (_) => EditCharacterView(character: character),
+    );
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(),
-      body: EditCharacterLayout(
+      appBar: AppBar(title: Text(character.name)),
+      body: CharacterLayout(
+        mode: Mode.update,
         character: character,
+        onSave: (character) {
+          ref.read(authProvider.notifier).updateCharacter(character);
+          Navigator.of(context).pop();
+        },
       ),
     );
   }
 }
 
-class EditCharacterLayout extends ConsumerWidget {
-  const EditCharacterLayout({
+class CharacterLayout extends ConsumerWidget {
+  const CharacterLayout({
     Key? key,
-    this.character,
+    required this.character,
+    required this.mode,
     this.onSave,
   }) : super(key: key);
 
-  final Character? character;
+  final Character character;
+  final Mode mode;
   final OnSave? onSave;
 
   static const double _kSpacing = 24;
@@ -77,8 +99,8 @@ class EditCharacterLayout extends ConsumerWidget {
     return ProviderScope(
       overrides: [
         characterControllerProvider.overrideWithValue(
-          CharacterController(initialState: character ?? Character()),
-        )
+          CharacterController(initialState: character),
+        ),
       ],
       child: Center(
         child: Padding(
@@ -86,8 +108,10 @@ class EditCharacterLayout extends ConsumerWidget {
           child: Column(
             children: [
               const Header(),
-              const Gap(_kSpacing * 2),
-              const CharacterAvatar(),
+              if (mode == Mode.create) ...[
+                const Gap(_kSpacing * 2),
+                const CharacterAvatar(),
+              ],
               const Gap(_kSpacing),
               const Attributes(),
               ActionButtons(onSave: onSave),
@@ -117,12 +141,13 @@ class CharacterAvatar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final avatars = ref.read(avatarsProvider);
     final character = ref.watch(characterControllerProvider);
     final controller = ref.read(characterControllerProvider.notifier);
-    final index = Avatar.all.indexWhere(
+    final index = avatars.indexWhere(
       (avatar) => avatar.name == character.name,
     );
-    final avatar = Avatar.all[index];
+    final avatar = avatars[index];
 
     return Stack(
       alignment: Alignment.center,
@@ -139,7 +164,7 @@ class CharacterAvatar extends ConsumerWidget {
           child: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: index > 0
-                ? () => controller.setName(Avatar.all[index - 1].name)
+                ? () => controller.setName(avatars[index - 1].name)
                 : null,
           ),
         ),
@@ -147,8 +172,8 @@ class CharacterAvatar extends ConsumerWidget {
           alignment: Alignment.centerRight,
           child: IconButton(
             icon: const Icon(Icons.arrow_forward_ios),
-            onPressed: index < Avatar.all.length - 1
-                ? () => controller.setName(Avatar.all[index + 1].name)
+            onPressed: index < avatars.length - 1
+                ? () => controller.setName(avatars[index + 1].name)
                 : null,
           ),
         )
@@ -229,16 +254,17 @@ class ActionButtons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ButtonBar(
+      alignment: MainAxisAlignment.spaceBetween,
       children: [
         TextButton(
-          style: TextButton.styleFrom(primary: Colors.white70),
+          style: TextButton.styleFrom(primary: AppColors.gray10),
           onPressed: () {
             ref.read(characterControllerProvider.notifier).refresh();
           },
           child: const Text('RESET'),
         ),
         TextButton(
-          style: TextButton.styleFrom(primary: Colors.white),
+          style: TextButton.styleFrom(primary: AppColors.gray10),
           onPressed: () => onSave?.call(ref.read(characterControllerProvider)),
           child: const Text('SAVE'),
         ),

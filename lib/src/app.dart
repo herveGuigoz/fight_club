@@ -46,16 +46,16 @@ class FightClub extends ConsumerWidget {
   }
 }
 
-class Home extends StatefulWidget {
+class Home extends ConsumerStatefulWidget {
   const Home({Key? key}) : super(key: key);
 
   static const routeName = '/';
 
   @override
-  State<Home> createState() => _HomeState();
+  ConsumerState<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends ConsumerState<Home> {
   static final destinations = <Destination>[
     Destination(
       label: 'Characters',
@@ -74,9 +74,10 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final canCreateCharacter = ref.watch(isCharacterCreationAllowedProvider);
 
     return Scaffold(
-      floatingActionButton: selectedIndex == 0
+      floatingActionButton: selectedIndex == 0 && canCreateCharacter
           ? FloatingActionButton(
               mini: true,
               onPressed: () {

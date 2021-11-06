@@ -16,9 +16,6 @@ class LobbyView extends ConsumerWidget {
     final characters = ref.watch(availableCharactersProvider);
     final selectedCharacter = ref.watch(selectedCharacterProvider);
 
-    print(selectedCharacter);
-    print(characters);
-
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(

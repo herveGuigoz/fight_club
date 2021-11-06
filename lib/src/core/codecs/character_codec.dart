@@ -23,7 +23,7 @@ class CharacterCodec extends JsonCodec<Character> {
 
   @override
   Map<String, dynamic> toMap(Character value) {
-    return {
+    return <String, dynamic>{
       'id': value.id,
       'name': value.name,
       'level': value.level,

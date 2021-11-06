@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
-import 'font_weights.dart';
+import 'package:theme/src/typography/font_weights.dart';
 
 /// Text Style Definitions
 ///
@@ -29,7 +28,7 @@ class AppTextStyle {
     package: 'theme',
     fontFamily: 'RobotoMono',
     inherit: false,
-    fontSize: 17.0,
+    fontSize: 17,
     letterSpacing: -0.41,
     color: Colors.white,
     decoration: TextDecoration.none,
