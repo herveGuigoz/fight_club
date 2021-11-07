@@ -1,4 +1,5 @@
 import 'package:fight_club/src/core/data/models/models.dart';
+import 'package:fight_club/src/modules/lobby/logic/fight_observer.dart';
 import 'package:fight_club/src/modules/lobby/logic/fight_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -185,6 +186,21 @@ void main() {
 
         expect(result.didWin(characterA), isFalse);
       });
+
+      test('notify observer', () async {
+        final characterA = Character(attack: 10, defense: 10);
+        final characterB = Character(attack: 5, defense: 5);
+        final observer = MockObserver();
+        final fight = await FightService(observers: [observer]).launchFight(
+          characterA,
+          characterB,
+        );
+
+        verify(() => observer.didFight(characterA, fight)).called(1);
+        verify(() => observer.didFight(characterB, fight)).called(1);
+      });
     });
   });
 }
+
+class MockObserver extends Mock implements FightObserver {}

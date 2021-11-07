@@ -20,13 +20,7 @@ class FightService {
   Future<Fight> launchFight(Character user, Character opponent) async {
     assertAtLeastOneCharacterCanWin(user, opponent);
 
-    late final List<Round> rounds;
-
-    try {
-      rounds = await compute(processFight, IsolateEntry(user, opponent));
-    } catch (error) {
-      throw Exception('Could not process fight: $error');
-    }
+    final rounds = await compute(processFight, IsolateEntry(user, opponent));
 
     final fight = Fight(date: DateTime.now(), rounds: rounds);
 
