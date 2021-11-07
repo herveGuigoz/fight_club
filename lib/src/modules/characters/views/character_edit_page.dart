@@ -198,8 +198,7 @@ class Attributes extends ConsumerWidget {
             child: Row(
               children: [
                 Expanded(
-                  // todo attribute.label
-                  child: Text('${attribute.runtimeType}'),
+                  child: Text(attribute.label()),
                 ),
                 Expanded(
                   child: Center(

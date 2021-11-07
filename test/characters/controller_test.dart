@@ -58,19 +58,6 @@ void main() {
         final state = container.read(characterControllerProvider);
         expect(state, isA<Character>());
       });
-
-      test('find character by ids', () {
-        final character = Character(magik: 10);
-        final container = createContainer(
-          overrides: [
-            userCharactersProvider.overrideWithValue([character])
-          ],
-        );
-        expect(
-          container.read(characterControllerProvider).hashCode,
-          equals(character.hashCode),
-        );
-      });
     });
   });
 }

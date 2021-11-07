@@ -51,49 +51,10 @@ void main() {
       });
     });
 
-    group('serialization', () {
-      final json = {
-        'id': 'id',
-        'level': 7,
-        'skills': 0,
-        'health': 10,
-        'attack': 9,
-        'defense': 4,
-        'magik': 8,
-        'fights': [],
-      };
-
-      test('CharacterCodec decode correct value', () {
-        final character = codec.fromMap(json);
-        expect(character.level, equals(7));
-        expect(character.skills, equals(0));
-        expect(character.health.points, equals(10));
-        expect(character.attack.points, equals(9));
-        expect(character.defense.points, equals(4));
-        expect(character.magik.points, equals(8));
-        expect(character.fights, equals([]));
-      });
-
-      test('CharacterCodec format correct json', () {
-        final character = Character(
-          id: 'id',
-          level: 7,
-          skills: 0,
-          health: 10,
-          attack: 9,
-          defense: 4,
-          magik: 8,
-          fights: [],
-        );
-
-        expect(codec.toMap(character), equals(json));
-      });
-    });
-
     group('equality', () {
       test('unit are equals', () {
-        final characterA = Character();
-        final characterB = Character();
+        final characterA = Character(id: 'A');
+        final characterB = Character(id: 'A');
         expect(characterA == characterB, isTrue);
         expect(characterA.hashCode == characterA.hashCode, isTrue);
       });
@@ -105,8 +66,14 @@ void main() {
       });
 
       test('list are equals', () {
-        final listA = [Character(attack: 1), Character(attack: 2)];
-        final listB = [Character(attack: 1), Character(attack: 2)];
+        final listA = [
+          Character(id: 'A', attack: 1),
+          Character(id: 'A', attack: 2)
+        ];
+        final listB = [
+          Character(id: 'A', attack: 1),
+          Character(id: 'A', attack: 2)
+        ];
         expect(listEquals(listA, listB), isTrue);
       });
 
@@ -119,8 +86,8 @@ void main() {
 
     group('copyWith', () {
       test('reference current attributes', () {
-        final characterA = Character();
-        final characterB = Character().copyWith();
+        final characterA = Character(id: 'A');
+        final characterB = Character(id: 'A').copyWith();
         expect(characterA, equals(characterB));
       });
       test('reference new attributes', () {
@@ -142,10 +109,10 @@ void main() {
     });
 
     group('to string', () {
-      test('reference skills, level and all attributes', () {
+      test('reference name, skills, level and all attributes', () {
         expect(
           RegExp(
-            r'Character\(level:\s\d+,\sskills:\s\d+,\sattributes:.+\)$',
+            r'Character\(name:\s\w+,\slevel:\s\d+,\sskills:\s\d+,\sattributes:.+\)$',
           ).hasMatch(Character().toString()),
           isTrue,
         );

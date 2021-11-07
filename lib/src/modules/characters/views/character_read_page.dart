@@ -100,7 +100,7 @@ class _AttributesLayoutState extends ConsumerState<AttributesLayout> {
             ),
             for (final attribute in character.attributes)
               OutlinedListTile(
-                label: attribute.runtimeType.toString(),
+                label: attribute.label(),
                 value: attribute.points,
               ),
             ButtonBar(

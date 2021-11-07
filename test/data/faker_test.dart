@@ -15,7 +15,11 @@ void main() {
     test('generate random Character', () {
       final character = Faker.character(maxFightsCount: 10);
       expect(character, isA<Character>());
-      expect(character.fights, isNotEmpty);
+    });
+
+    test('generate list of Character', () {
+      final characters = Faker.characters(2);
+      expect(characters.length, equals(2));
     });
   });
 }

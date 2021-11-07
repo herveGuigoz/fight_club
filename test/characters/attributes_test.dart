@@ -28,12 +28,65 @@ void main() {
     group('operators', () {
       const health = Health(44);
 
-      test('add one increase points by one', () {
+      test('+ increase points by one', () {
         expect(health + 1, equals(45));
       });
 
-      test('remove one decrease points by one', () {
+      test('- decrease points by one', () {
         expect(health - 1, equals(43));
+      });
+
+      test('> return correct boolean', () {
+        const healthA = Health(2);
+        const healthB = Health(1);
+        expect(healthA > healthB, isTrue);
+        expect(healthB > healthA, isFalse);
+      });
+
+      test('< return correct boolean', () {
+        const healthA = Health(2);
+        const healthB = Health(1);
+        expect(healthA < healthB, isFalse);
+        expect(healthB < healthA, isTrue);
+      });
+
+      test('>= and <= return correct boolean', () {
+        const healthA = Health(1);
+        const healthB = Health(1);
+        expect(healthA <= healthB, isTrue);
+        expect(healthB <= healthA, isTrue);
+        expect(healthA >= healthB, isTrue);
+        expect(healthB >= healthA, isTrue);
+      });
+    });
+
+    group('copyWith', () {
+      test('must override copyWith()', () {
+        const health = Health(0);
+        const attack = Attack(0);
+        const defense = Defense(0);
+        const magik = Magik(0);
+        expect(health.copyWith(), equals(health));
+        expect(health.copyWith(points: 1), equals(const Health(1)));
+        expect(attack.copyWith(), equals(attack));
+        expect(attack.copyWith(points: 1), equals(const Attack(1)));
+        expect(defense.copyWith(), equals(defense));
+        expect(defense.copyWith(points: 1), equals(const Defense(1)));
+        expect(magik.copyWith(), equals(magik));
+        expect(magik.copyWith(points: 1), equals(const Magik(1)));
+      });
+    });
+
+    group('must override label()', () {
+      test('return correct labels', () {
+        const health = Health(44);
+        const attack = Attack(3);
+        const defense = Defense(9);
+        const magik = Magik(21);
+        expect(health.label(), equals('Health'));
+        expect(attack.label(), equals('Attack'));
+        expect(defense.label(), equals('Defense'));
+        expect(magik.label(), equals('Magik'));
       });
     });
 

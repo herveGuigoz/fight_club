@@ -7,6 +7,8 @@ abstract class Attribute {
 
   Attribute copyWith({int? points});
 
+  String label();
+
   int get skillsPointCosts => max(1, (points / 5).ceil());
 
   int operator -(int by) => points - by;
@@ -37,6 +39,9 @@ class Health extends Attribute {
   Health copyWith({int? points}) => Health(points ?? this.points);
 
   @override
+  String label() => 'Health';
+
+  @override
   String toString() => 'Health($points)';
 }
 
@@ -45,6 +50,9 @@ class Attack extends Attribute {
 
   @override
   Attack copyWith({int? points}) => Attack(points ?? this.points);
+
+  @override
+  String label() => 'Attack';
 
   @override
   String toString() => 'Attack($points)';
@@ -57,6 +65,9 @@ class Defense extends Attribute {
   Defense copyWith({int? points}) => Defense(points ?? this.points);
 
   @override
+  String label() => 'Defense';
+
+  @override
   String toString() => 'Defense($points)';
 }
 
@@ -65,6 +76,9 @@ class Magik extends Attribute {
 
   @override
   Magik copyWith({int? points}) => Magik(points ?? this.points);
+
+  @override
+  String label() => 'Magik';
 
   @override
   String toString() => 'Magik($points)';

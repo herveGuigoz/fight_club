@@ -70,7 +70,7 @@ class Character extends Model {
 
   @override
   String toString() {
-    return 'Character(name: $name, level: $level, skills: $skills, attributes: $health, $attack, $defense, $magik, fights: $fights)';
+    return 'Character(name: $name, level: $level, skills: $skills, attributes: $health, $attack, $defense, $magik)';
   }
 
   Character operator +(Attribute attribute) {
@@ -87,10 +87,10 @@ class Character extends Model {
     final previousAttribute = attribute.copyWith(points: attribute.points - 1);
     return copyWith(
       skills: skills + previousAttribute.skillsPointCosts,
-      health: attribute is Health ? health - 1 : health.points,
-      attack: attribute is Attack ? attack - 1 : attack.points,
-      defense: attribute is Defense ? defense - 1 : defense.points,
-      magik: attribute is Magik ? magik - 1 : magik.points,
+      health: attribute is Health ? previousAttribute.points : health.points,
+      attack: attribute is Attack ? previousAttribute.points : attack.points,
+      defense: attribute is Defense ? previousAttribute.points : defense.points,
+      magik: attribute is Magik ? previousAttribute.points : magik.points,
     );
   }
 
@@ -99,6 +99,7 @@ class Character extends Model {
     if (identical(this, other)) return true;
 
     return other is Character &&
+        other.id == id &&
         other.name == name &&
         other.level == level &&
         other.skills == skills &&
@@ -111,7 +112,8 @@ class Character extends Model {
 
   @override
   int get hashCode {
-    return name.hashCode ^
+    return id.hashCode ^
+        name.hashCode ^
         level.hashCode ^
         skills.hashCode ^
         health.hashCode ^

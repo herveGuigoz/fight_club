@@ -125,9 +125,9 @@ void main() {
       final A = Character(attack: 10, defense: 10, health: 20);
       final B = Character(attack: 10, defense: 5, health: 10);
 
-      test('launchFight return FightResult', () async {
+      test('launchFight return Fight', () async {
         final result = await FightService().launchFight(A, B);
-        expect(result, isA<FightResult>());
+        expect(result, isA<Fight>());
       });
       test(
         'until a characters Health Point reaches 0, the fight continues',
@@ -163,21 +163,27 @@ void main() {
 
     group('fight result', () {
       test('FightResult.won is true when user win', () async {
+        final characterA = Character(attack: 10, defense: 10);
+        final characterB = Character(attack: 5, defense: 5);
+
         final result = await FightService().launchFight(
-          Character(attack: 10, defense: 10),
-          Character(attack: 5, defense: 1),
+          characterA,
+          characterB,
         );
 
-        expect(result.didWin, isTrue);
+        expect(result.didWin(characterA), isTrue);
       });
 
       test('FightResult.won is false when user loose', () async {
+        final characterA = Character(attack: 1, defense: 1);
+        final characterB = Character(attack: 10, defense: 10);
+
         final result = await FightService().launchFight(
-          Character(attack: 1, defense: 1),
-          Character(attack: 10, defense: 10),
+          characterA,
+          characterB,
         );
 
-        expect(result.didWin, isFalse);
+        expect(result.didWin(characterA), isFalse);
       });
     });
   });
