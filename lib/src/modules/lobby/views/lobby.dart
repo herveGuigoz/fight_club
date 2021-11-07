@@ -49,9 +49,7 @@ class LobbyView extends ConsumerWidget {
             ButtonBar(children: [
               TextButton(
                 onPressed: selectedCharacter != null
-                    ? () => Navigator.of(context).pushNamed(
-                          FightResultView.routeName,
-                        )
+                    ? () => Navigator.of(context).push(FightResultView.route())
                     : null,
                 child: const Text('Fight'),
               ),

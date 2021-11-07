@@ -1,10 +1,14 @@
+import 'dart:math';
+
 import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:fight_club/src/core/data/faker.dart';
 import 'package:fight_club/src/core/data/random_generator.dart';
 import 'package:flutter/foundation.dart';
 
+import 'fight_observer.dart';
+
 /// Manage a the list of 1000 fake characters
-class CaractersController {
+class CaractersController implements FightObserver {
   CaractersController();
 
   @protected
@@ -48,8 +52,22 @@ class CaractersController {
     return Random.element(closestOpponentByFights);
   }
 
+  @override
+  void didFight(Character character, Fight fight) {
+    if (!state.exist(character)) return;
+
+    final didWin = fight.didWin(character);
+    saveCharacter(
+      character.copyWith(
+        skills: didWin ? character.skills + 1 : character.skills,
+        level: didWin ? character.level + 1 : max(1, character.level - 1),
+        fights: [...character.fights, fight],
+      ),
+    );
+  }
+
   void saveCharacter(Character character) {
-    state = state.map((it) => it.id == character.id ? character : it).toList();
+    state = state.replace(character);
   }
 }
 

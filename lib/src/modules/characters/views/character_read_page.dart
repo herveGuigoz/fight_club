@@ -4,21 +4,19 @@ import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:fight_club/src/modules/lobby/lobby.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:theme/theme.dart';
 
 class CharacterReadView extends ConsumerWidget {
-  const CharacterReadView({
-    Key? key,
-    required this.characterId,
-  }) : super(key: key);
+  const CharacterReadView(this.character, {Key? key}) : super(key: key);
 
-  final String characterId;
+  final Character character;
 
-  static const routeName = '/character/:id';
+  static Route<T> route<T>(Character character) {
+    return MaterialPageRoute<T>(builder: (_) => CharacterReadView(character));
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final character = ref.watch(findCharacterById(characterId));
-
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -56,13 +54,33 @@ class CharacterReadView extends ConsumerWidget {
   }
 }
 
-class AttributesLayout extends StatelessWidget {
+class AttributesLayout extends ConsumerStatefulWidget {
   const AttributesLayout({
     Key? key,
     required this.character,
   }) : super(key: key);
 
   final Character character;
+
+  @override
+  ConsumerState<AttributesLayout> createState() => _AttributesLayoutState();
+}
+
+class _AttributesLayoutState extends ConsumerState<AttributesLayout> {
+  late Character character = widget.character;
+
+  Future<void> editAttributes() async {
+    final updatedCharacter = await Navigator.of(context).push(
+      EditCharacterView.route(character),
+    );
+
+    if (updatedCharacter != null) {
+      ref.read(authProvider.notifier).updateCharacter(updatedCharacter);
+      setState(() {
+        character = updatedCharacter;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,63 +90,29 @@ class AttributesLayout extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            AttributeListTile(
+            OutlinedListTile(
               label: 'Level',
               value: character.level,
             ),
-            AttributeListTile(
+            OutlinedListTile(
               label: 'Skills',
               value: character.skills,
             ),
             for (final attribute in character.attributes)
-              AttributeListTile(
+              OutlinedListTile(
                 label: attribute.runtimeType.toString(),
                 value: attribute.points,
               ),
             ButtonBar(
               children: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).push(
-                    EditCharacterView.route(character),
-                  ),
+                  onPressed: editAttributes,
                   child: const Text('Edit'),
                 ),
               ],
             )
           ],
         ),
-      ),
-    );
-  }
-}
-
-class AttributeListTile extends StatelessWidget {
-  const AttributeListTile({
-    Key? key,
-    required this.label,
-    required this.value,
-  }) : super(key: key);
-
-  final String label;
-  final int value;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: theme.dividerColor),
-      ),
-      constraints: const BoxConstraints(minHeight: 60),
-      child: Row(
-        children: [
-          Text(label),
-          Expanded(child: Center(child: Text('$value'))),
-        ],
       ),
     );
   }
@@ -164,31 +148,6 @@ class FightsLayout extends StatelessWidget {
             },
           ),
       ],
-    );
-  }
-}
-
-class FightResumeView extends StatelessWidget {
-  const FightResumeView({
-    Key? key,
-    required this.character,
-    required this.fight,
-  }) : super(key: key);
-
-  final Character character;
-  final Fight fight;
-
-  static Route<void> route(Character character, Fight fight) {
-    return MaterialPageRoute<void>(
-      builder: (_) => FightResumeView(character: character, fight: fight),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: FightResumeLayout(character: character, fight: fight),
     );
   }
 }

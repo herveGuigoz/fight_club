@@ -35,6 +35,8 @@ class AuthController extends AuthService implements FightObserver {
 
   @override
   void didFight(Character character, Fight fight) {
+    if (!state.characters.exist(character)) return;
+
     final didWin = fight.didWin(character);
     updateCharacter(
       character.copyWith(

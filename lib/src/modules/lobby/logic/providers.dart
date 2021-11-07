@@ -20,7 +20,10 @@ final selectedCharacterProvider = StateProvider<Character?>(
 
 final fightService = Provider(
   (ref) => FightService(
-    observers: [ref.read(authProvider.notifier)],
+    observers: [
+      ref.read(authProvider.notifier),
+      ref.read(caractersProvider),
+    ],
   ),
   name: 'fightService',
 );

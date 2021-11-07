@@ -21,9 +21,7 @@ class OnboardingView extends ConsumerWidget {
         character: Character(),
         onSave: (character) {
           ref.read(authProvider.notifier).addNewCharacter(character);
-          WidgetsBinding.instance!.addPostFrameCallback((_) {
-            Navigator.of(context).pushReplacementNamed(Home.routeName);
-          });
+          Navigator.of(context).pushReplacementNamed(Home.routeName);
         },
       ),
     );

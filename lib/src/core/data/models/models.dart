@@ -4,6 +4,8 @@ export 'fight.dart';
 export 'round.dart';
 export 'session.dart';
 
+import 'package:fight_club/src/core/data/models/character.dart';
+
 /// Imutable data class
 abstract class Model {
   const Model(this.id);
@@ -13,6 +15,10 @@ abstract class Model {
 
 /// Utilities to interact with Iterable of [Model]
 extension IterableExtension<T extends Model> on Iterable<T> {
+  bool exist(Character value) {
+    return any((character) => character.id == value.id);
+  }
+
   List<T> replace(T newItem) {
     final models = <T>[];
 

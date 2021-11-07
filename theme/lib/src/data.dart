@@ -55,5 +55,9 @@ class AppThemeData {
         primary: AppColors.green12,
       ),
     ),
+    dialogTheme: DialogTheme(
+      titleTextStyle: AppTextStyle.subtitle1,
+      contentTextStyle: AppTextStyle.bodyText2,
+    ),
   );
 }

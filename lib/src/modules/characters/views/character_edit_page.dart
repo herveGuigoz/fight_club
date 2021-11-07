@@ -10,12 +10,11 @@ typedef OnSave = void Function(Character character);
 
 enum Mode { create, update }
 
+/// Character editor for creation.
 class CreateCharacterView extends ConsumerWidget {
   const CreateCharacterView({
     Key? key,
   }) : super(key: key);
-
-  static const routeName = '/characters/create';
 
   static Route<Character?> route() {
     return MaterialPageRoute<Character?>(
@@ -31,9 +30,7 @@ class CreateCharacterView extends ConsumerWidget {
       ),
       body: CharacterLayout(
         mode: Mode.create,
-        character: Character(
-          name: ref.read(avatarsProvider).first.name,
-        ),
+        character: Character(name: ref.read(avatarsProvider).first.name),
         onSave: (character) {
           ref.read(authProvider.notifier).addNewCharacter(character);
           Navigator.of(context).pop(character);
@@ -43,6 +40,7 @@ class CreateCharacterView extends ConsumerWidget {
   }
 }
 
+/// Editor for character's attribute
 class EditCharacterView extends ConsumerWidget {
   const EditCharacterView({
     Key? key,
@@ -51,8 +49,8 @@ class EditCharacterView extends ConsumerWidget {
 
   final Character character;
 
-  static Route<void> route(Character character) {
-    return MaterialPageRoute<void>(
+  static Route<Character?> route(Character character) {
+    return MaterialPageRoute<Character?>(
       builder: (_) => EditCharacterView(character: character),
     );
   }
@@ -65,8 +63,7 @@ class EditCharacterView extends ConsumerWidget {
         mode: Mode.update,
         character: character,
         onSave: (character) {
-          Navigator.of(context).pop();
-          ref.read(authProvider.notifier).updateCharacter(character);
+          Navigator.of(context).pop(character);
         },
       ),
     );
@@ -114,6 +111,7 @@ class CharacterLayout extends ConsumerWidget {
   }
 }
 
+/// Render character's skills point available
 class Header extends ConsumerWidget {
   const Header({Key? key}) : super(key: key);
 
@@ -124,6 +122,8 @@ class Header extends ConsumerWidget {
   }
 }
 
+/// Render character's avatar selector.
+/// Only available avatars will be displayed.
 class CharacterAvatar extends ConsumerWidget {
   const CharacterAvatar({
     Key? key,
@@ -173,6 +173,7 @@ class CharacterAvatar extends ConsumerWidget {
   }
 }
 
+/// Render list view of character's attribute for edition.
 class Attributes extends ConsumerWidget {
   const Attributes({Key? key}) : super(key: key);
 
@@ -234,6 +235,7 @@ class Attributes extends ConsumerWidget {
   }
 }
 
+/// Render text buttons to handle current changes.
 class ActionButtons extends ConsumerWidget {
   const ActionButtons({
     Key? key,

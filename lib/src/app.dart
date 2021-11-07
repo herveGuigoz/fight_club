@@ -1,5 +1,4 @@
 import 'package:fight_club/src/modules/authentication/authentication.dart';
-import 'package:fight_club/src/modules/characters/views/character_read_page.dart';
 import 'package:fight_club/src/modules/lobby/lobby.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,33 +6,6 @@ import 'package:path_icon/path_icon.dart';
 import 'package:theme/theme.dart';
 
 import 'modules/characters/characters.dart';
-
-typedef Router = Route<dynamic>? Function(RouteSettings);
-
-final router = Provider<Router>((ref) {
-  return (settings) {
-    return MaterialPageRoute<void>(
-      settings: settings,
-      builder: (BuildContext context) {
-        /// auth guard
-        if (!ref.read(hasCharactersProvider)) return const OnboardingView();
-
-        final location = settings.name;
-
-        switch (location) {
-          case CharacterReadView.routeName:
-            assert(settings.arguments != null);
-            final id = settings.arguments as String;
-            return CharacterReadView(characterId: id);
-          case FightResultView.routeName:
-            return const FightResultView();
-          default:
-            return const Home();
-        }
-      },
-    );
-  };
-});
 
 class FightClub extends ConsumerWidget {
   const FightClub({Key? key}) : super(key: key);
@@ -46,7 +18,18 @@ class FightClub extends ConsumerWidget {
       supportedLocales: const [Locale('en', '')],
       theme: AppThemeData.dark,
       darkTheme: AppThemeData.dark,
-      onGenerateRoute: ref.watch(router),
+      onGenerateRoute: (settings) {
+        return MaterialPageRoute<void>(
+          settings: settings,
+          builder: (BuildContext context) {
+            /// auth guard
+            if (!ref.read(hasCharactersProvider)) {
+              return const OnboardingView();
+            }
+            return const Home();
+          },
+        );
+      },
     );
   }
 }

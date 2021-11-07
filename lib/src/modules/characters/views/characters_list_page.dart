@@ -29,9 +29,8 @@ class CharactersListView extends ConsumerWidget {
                   ),
                   title: Text(character.name),
                   trailing: Text('Level: ${character.level}'),
-                  onTap: () => Navigator.of(context).pushNamed(
-                    CharacterReadView.routeName,
-                    arguments: character.id,
+                  onTap: () => Navigator.of(context).push(
+                    CharacterReadView.route(character),
                   ),
                 );
               },

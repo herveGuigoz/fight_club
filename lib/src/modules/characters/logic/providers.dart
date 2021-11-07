@@ -10,14 +10,6 @@ final characterControllerProvider =
   name: 'characterControllerProvider',
 );
 
-final findCharacterById = Provider.family.autoDispose<Character, String>(
-  (ref, id) {
-    return ref
-        .watch(userCharactersProvider)
-        .firstWhere((character) => character.id == id);
-  },
-);
-
 final avatarsProvider = Provider((ref) {
   final avatars = Avatar.all;
   final characters = ref.watch(userCharactersProvider);

@@ -4,7 +4,7 @@ import 'package:fight_club/src/core/data/models/models.dart';
 class CharacterCodec extends JsonCodec<Character> {
   const CharacterCodec();
 
-  static const _fight = FightCodec();
+  // static const _fight = FightCodec();
 
   @override
   Character fromMap(Map<String, dynamic> json) {
@@ -17,7 +17,8 @@ class CharacterCodec extends JsonCodec<Character> {
       attack: json['attack'] as int,
       defense: json['defense'] as int,
       magik: json['magik'] as int,
-      fights: List<Fight>.from(json['fights']?.map((x) => _fight.fromMap(x))),
+      fights: [],
+      // fights: List<Fight>.from(json['fights']?.map((x) => _fight.fromMap(x))),
     );
   }
 
@@ -32,7 +33,7 @@ class CharacterCodec extends JsonCodec<Character> {
       'attack': value.attack.points,
       'defense': value.defense.points,
       'magik': value.magik.points,
-      'fights': value.fights.map((x) => _fight.toMap(x)).toList(),
+      // 'fights': value.fights.map((x) => _fight.toMap(x)).toList(),
     };
   }
 }
