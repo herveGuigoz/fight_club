@@ -38,10 +38,12 @@ class AuthController extends AuthService implements FightObserver {
     if (!state.characters.exist(character)) return;
 
     final didWin = fight.didWin(character);
+
     updateCharacter(
       character.copyWith(
         skills: didWin ? character.skills + 1 : character.skills,
         level: didWin ? character.level + 1 : max(1, character.level - 1),
+        health: kDefaultHealthPoints,
         fights: [...character.fights, fight],
       ),
     );
@@ -70,16 +72,5 @@ class CharactersLengthLimitException implements Exception {
   @override
   String toString() {
     return 'Maximum $kCharactersLengthLimit characters per player is allowed';
-  }
-}
-
-class CharacterNotFoundException implements Exception {
-  CharacterNotFoundException(this.character);
-
-  final Character character;
-
-  @override
-  String toString() {
-    return 'Could not find any character with id ${character.id}';
   }
 }

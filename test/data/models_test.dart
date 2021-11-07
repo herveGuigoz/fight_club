@@ -5,6 +5,25 @@ import 'package:mocktail/mocktail.dart';
 class MockFight extends Mock implements Fight {}
 
 void main() {
+  group('Session', () {
+    test('copyWith return new instance', () {
+      const sessionA = Session();
+      final sessionB = sessionA.copyWith(characters: [Character()]);
+      final sessionC = sessionB.copyWith();
+      expect(sessionB.characters, isNotEmpty);
+      expect(sessionC.characters, isNotEmpty);
+    });
+    test('override toString()', () {
+      expect(const Session().toString(), 'Session(characters: [])');
+    });
+
+    test('override operator ==', () {
+      const sessionA = Session();
+      final sessionB = Session(characters: [Character()]);
+      expect(sessionA != sessionB, isTrue);
+      expect(sessionA.hashCode != sessionB.hashCode, isTrue);
+    });
+  });
   group('Character model', () {
     group('attribute', () {
       final character = Character();

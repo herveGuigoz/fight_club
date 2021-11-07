@@ -3,13 +3,16 @@ import 'package:uuid/uuid.dart';
 
 import 'package:fight_club/src/core/data/models/models.dart';
 
+const kDefaultSkillsPoints = 12;
+const kDefaultHealthPoints = 10;
+
 class Character extends Model {
   Character({
     String? id,
     this.name = 'Anonymous',
     this.level = 1,
-    this.skills = 12,
-    int health = 10,
+    this.skills = kDefaultSkillsPoints,
+    int health = kDefaultHealthPoints,
     int attack = 0,
     int defense = 0,
     int magik = 0,
