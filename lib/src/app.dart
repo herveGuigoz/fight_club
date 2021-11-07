@@ -1,4 +1,5 @@
 import 'package:fight_club/src/modules/authentication/authentication.dart';
+import 'package:fight_club/src/modules/characters/views/character_read_page.dart';
 import 'package:fight_club/src/modules/lobby/lobby.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +21,10 @@ final router = Provider<Router>((ref) {
         final location = settings.name;
 
         switch (location) {
+          case CharacterReadView.routeName:
+            assert(settings.arguments != null);
+            final id = settings.arguments as String;
+            return CharacterReadView(characterId: id);
           case FightResultView.routeName:
             return const FightResultView();
           default:

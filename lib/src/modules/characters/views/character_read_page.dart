@@ -1,80 +1,71 @@
 import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:fight_club/src/modules/authentication/authentication.dart';
+import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:fight_club/src/modules/lobby/lobby.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _scopedCharacter = Provider<Character>(
-  (ref) => throw UnimplementedError(),
-);
-
 class CharacterReadView extends ConsumerWidget {
   const CharacterReadView({
     Key? key,
-    required this.character,
+    required this.characterId,
   }) : super(key: key);
 
-  final Character character;
+  final String characterId;
 
-  static Route<void> route({required Character character}) {
-    return MaterialPageRoute<void>(
-      builder: (_) => CharacterReadView(character: character),
-    );
-  }
+  static const routeName = '/character/:id';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ProviderScope(
-      overrides: [
-        _scopedCharacter.overrideWithValue(character),
-      ],
-      child: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(character.name),
-            actions: [
-              IconButton(
-                iconSize: 16,
-                splashRadius: 24,
-                onPressed: () async {
-                  final decision = await DeleteCharacterDialog.show(context);
-                  if (decision ?? false) {
-                    ref.read(authProvider.notifier).removeCharacter(character);
-                    Navigator.of(context).pop();
-                  }
-                },
-                icon: const Icon(Icons.delete),
-              ),
-            ],
-            bottom: const TabBar(
-              tabs: [
-                Tab(text: 'Attributes'),
-                Tab(text: 'Fights'),
-              ],
+    final character = ref.watch(findCharacterById(characterId));
+
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(character.name),
+          actions: [
+            IconButton(
+              iconSize: 16,
+              splashRadius: 24,
+              onPressed: () async {
+                final decision = await DeleteCharacterDialog.show(context);
+                if (decision ?? false) {
+                  Navigator.of(context).pop();
+                  ref.read(authProvider.notifier).removeCharacter(character);
+                }
+              },
+              icon: const Icon(Icons.delete),
             ),
-          ),
-          body: const TabBarView(
-            children: [
-              AttributesLayout(),
-              FightsLayout(),
+          ],
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Attributes'),
+              Tab(text: 'Fights'),
             ],
           ),
+        ),
+        body: TabBarView(
+          children: [
+            AttributesLayout(character: character),
+            FightsLayout(character: character),
+          ],
         ),
       ),
     );
   }
 }
 
-class AttributesLayout extends ConsumerWidget {
+class AttributesLayout extends StatelessWidget {
   const AttributesLayout({
     Key? key,
+    required this.character,
   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final character = ref.watch(_scopedCharacter);
+  final Character character;
 
+  @override
+  Widget build(BuildContext context) {
     return ListTileTheme(
       dense: true,
       child: Padding(
@@ -97,7 +88,9 @@ class AttributesLayout extends ConsumerWidget {
             ButtonBar(
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.of(context).push(
+                    EditCharacterView.route(character),
+                  ),
                   child: const Text('Edit'),
                 ),
               ],
@@ -141,14 +134,16 @@ class AttributeListTile extends StatelessWidget {
   }
 }
 
-class FightsLayout extends ConsumerWidget {
+class FightsLayout extends StatelessWidget {
   const FightsLayout({
     Key? key,
+    required this.character,
   }) : super(key: key);
 
+  final Character character;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final character = ref.watch(_scopedCharacter);
+  Widget build(BuildContext context) {
     final fights = character.fights;
 
     if (fights.isEmpty) {

@@ -10,13 +10,6 @@ typedef OnSave = void Function(Character character);
 
 enum Mode { create, update }
 
-// todo
-final attributesDidChangeProvider = Provider(
-  (ref) => false,
-  dependencies: [characterControllerProvider],
-  name: 'attributesDidChangeProvider',
-);
-
 class CreateCharacterView extends ConsumerWidget {
   const CreateCharacterView({
     Key? key,
@@ -72,8 +65,8 @@ class EditCharacterView extends ConsumerWidget {
         mode: Mode.update,
         character: character,
         onSave: (character) {
-          ref.read(authProvider.notifier).updateCharacter(character);
           Navigator.of(context).pop();
+          ref.read(authProvider.notifier).updateCharacter(character);
         },
       ),
     );
@@ -102,21 +95,19 @@ class CharacterLayout extends ConsumerWidget {
           CharacterController(initialState: character),
         ),
       ],
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(_kSpacing),
-          child: Column(
-            children: [
-              const Header(),
-              if (mode == Mode.create) ...[
-                const Gap(_kSpacing * 2),
-                const CharacterAvatar(),
-              ],
-              const Gap(_kSpacing),
-              const Attributes(),
-              ActionButtons(onSave: onSave),
+      child: Padding(
+        padding: const EdgeInsets.all(_kSpacing),
+        child: Column(
+          children: [
+            const Header(),
+            if (mode == Mode.create) ...[
+              const Gap(_kSpacing * 2),
+              const CharacterAvatar(),
             ],
-          ),
+            const Gap(_kSpacing),
+            const Attributes(),
+            ActionButtons(onSave: onSave),
+          ],
         ),
       ),
     );
