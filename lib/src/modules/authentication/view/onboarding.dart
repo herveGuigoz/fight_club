@@ -16,13 +16,15 @@ class OnboardingView extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Create your avatar'),
       ),
-      body: CharacterLayout(
-        mode: Mode.create,
-        character: Character(),
-        onSave: (character) {
-          ref.read(authProvider.notifier).addNewCharacter(character);
-          Navigator.of(context).pushReplacementNamed(Home.routeName);
-        },
+      body: SingleChildScrollView(
+        child: CharacterLayout(
+          mode: Mode.create,
+          character: Character(),
+          onSave: (character) {
+            ref.read(authProvider.notifier).addNewCharacter(character);
+            Navigator.of(context).pushReplacementNamed(Home.routeName);
+          },
+        ),
       ),
     );
   }

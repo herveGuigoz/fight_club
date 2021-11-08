@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:theme/theme.dart';
 
-import '../helpers/helpers.dart';
+import '../../helpers/helpers.dart';
 
 void main() {
   group('Character controller', () {

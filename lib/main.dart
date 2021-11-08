@@ -19,7 +19,7 @@ void main() async {
         : await getTemporaryDirectory(),
   );
 
-  // await HydratedStateNotifier.storage.clear();
+  await HydratedStateNotifier.storage.clear();
 
   bootstrap(
     () => const ProviderScope(child: FightClub()),

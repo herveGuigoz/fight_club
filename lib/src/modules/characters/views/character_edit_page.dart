@@ -28,13 +28,15 @@ class CreateCharacterView extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Create your avatar'),
       ),
-      body: CharacterLayout(
-        mode: Mode.create,
-        character: Character(name: ref.read(avatarsProvider).first.name),
-        onSave: (character) {
-          ref.read(authProvider.notifier).addNewCharacter(character);
-          Navigator.of(context).pop(character);
-        },
+      body: SingleChildScrollView(
+        child: CharacterLayout(
+          mode: Mode.create,
+          character: Character(name: ref.read(avatarsProvider).first.name),
+          onSave: (character) {
+            ref.read(authProvider.notifier).addNewCharacter(character);
+            Navigator.of(context).pop(character);
+          },
+        ),
       ),
     );
   }
@@ -217,6 +219,7 @@ class Attributes extends ConsumerWidget {
                         icon: const Icon(Icons.remove),
                       ),
                       IconButton(
+                        key: Key('increment_${attribute.label()}'),
                         splashRadius: 16,
                         onPressed: controller.canBeUpgraded(attribute)
                             ? () => controller.upgrade(attribute)
@@ -249,6 +252,7 @@ class ActionButtons extends ConsumerWidget {
       alignment: MainAxisAlignment.spaceBetween,
       children: [
         TextButton(
+          key: const Key('reset_character'),
           style: TextButton.styleFrom(primary: AppColors.gray10),
           onPressed: () {
             ref.read(characterControllerProvider.notifier).refresh();
@@ -256,6 +260,7 @@ class ActionButtons extends ConsumerWidget {
           child: const Text('RESET'),
         ),
         TextButton(
+          key: const Key('save_character'),
           style: TextButton.styleFrom(primary: AppColors.gray10),
           onPressed: () => onSave?.call(ref.read(characterControllerProvider)),
           child: const Text('SAVE'),
