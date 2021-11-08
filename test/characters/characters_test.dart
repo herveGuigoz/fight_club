@@ -1,11 +1,9 @@
-import 'package:fight_club/src/core/codecs/codecs.dart';
 import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Characters', () {
-    const codec = CharacterCodec();
     group('attributes', () {
       final character = Character();
       final attributes = character.attributes;

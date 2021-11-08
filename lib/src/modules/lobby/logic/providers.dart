@@ -4,8 +4,8 @@ import 'package:fight_club/src/modules/lobby/logic/characters_controller.dart';
 import 'package:fight_club/src/modules/lobby/logic/fight_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final caractersProvider = Provider<CaractersController>(
-  (ref) => CaractersController(),
+final charactersProvider = Provider<CharactersController>(
+  (ref) => CharactersController(),
 );
 
 /// The currently selected character for the fight.
@@ -22,7 +22,7 @@ final fightService = Provider(
   (ref) => FightService(
     observers: [
       ref.read(authProvider.notifier),
-      ref.read(caractersProvider),
+      ref.read(charactersProvider),
     ],
   ),
   name: 'fightService',
@@ -33,7 +33,7 @@ final fightResultProvider = FutureProvider.autoDispose(
     final character = ref.read(selectedCharacterProvider);
     if (character == null) throw SelectedCharacterNotfound();
 
-    final other = await ref.read(caractersProvider).findOpponentFor(character);
+    final other = await ref.read(charactersProvider).findOpponentFor(character);
 
     final fight = await ref.read(fightService).launchFight(character, other);
 
@@ -46,13 +46,6 @@ final fightResultProvider = FutureProvider.autoDispose(
   },
   name: 'fightResultProvider',
 );
-
-extension FightExtension on WidgetRef {
-  void select(Character character) {
-    final controller = read(selectedCharacterProvider.state);
-    controller.state = character;
-  }
-}
 
 class SelectedCharacterNotfound implements Exception {
   @override

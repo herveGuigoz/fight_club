@@ -28,7 +28,10 @@ class LobbyView extends ConsumerWidget {
             DropdownButton<Character>(
               isExpanded: true,
               value: selectedCharacter,
-              onChanged: (character) => ref.select(character!),
+              onChanged: (character) {
+                final controller = ref.read(selectedCharacterProvider.state);
+                controller.state = character!;
+              },
               items: [
                 for (final character in characters)
                   DropdownMenuItem(

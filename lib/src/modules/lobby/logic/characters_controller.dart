@@ -8,19 +8,21 @@ import 'package:flutter/foundation.dart';
 import 'fight_observer.dart';
 
 /// Manage a the list of 1000 fake characters
-class CaractersController implements FightObserver {
-  CaractersController();
+class CharactersController implements FightObserver {
+  CharactersController([this._state = const []]);
 
-  @protected
-  List<Character> state = [];
+  List<Character> _state;
+
+  @visibleForTesting
+  List<Character> get state => _state;
 
   /// Create random [Character] in isolate.
   Future<List<Character>> getRandomCharacters({int count = 1000}) async {
-    if (state.isEmpty) {
-      state = await compute(Faker.characters, count);
+    if (_state.isEmpty) {
+      _state = await compute(Faker.characters, count);
     }
 
-    return state;
+    return _state;
   }
 
   Future<Character> findOpponentFor(Character character) async {
@@ -54,7 +56,7 @@ class CaractersController implements FightObserver {
 
   @override
   void didFight(Character character, Fight fight) {
-    if (!state.exist(character)) return;
+    if (!_state.exist(character)) return;
 
     final didWin = fight.didWin(character);
     saveCharacter(
@@ -67,7 +69,7 @@ class CaractersController implements FightObserver {
   }
 
   void saveCharacter(Character character) {
-    state = state.replace(character);
+    _state = _state.replace(character);
   }
 }
 
