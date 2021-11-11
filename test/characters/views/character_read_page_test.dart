@@ -164,7 +164,7 @@ void main() {
         await tester.tap(find.text('Edit'));
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byKey(const Key('increment_Health')));
+        await tester.tap(find.byKey(const Key('upgrade_Health')));
         await tester.tap(find.byKey(const Key('save_character')));
         await tester.pumpAndSettle();
 

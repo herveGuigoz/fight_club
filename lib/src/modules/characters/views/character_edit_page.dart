@@ -102,7 +102,10 @@ class CharacterLayout extends ConsumerWidget {
               const CharacterAvatar(),
             ],
             const Gap(_kSpacing),
-            const Attributes(),
+            const AttributeListTile<Health>(),
+            const AttributeListTile<Attack>(),
+            const AttributeListTile<Defense>(),
+            const AttributeListTile<Magik>(),
             ActionButtons(onSave: onSave),
           ],
         ),
@@ -173,24 +176,7 @@ class CharacterAvatar extends ConsumerWidget {
   }
 }
 
-/// Render list view of character's attribute for edition.
-class Attributes extends StatelessWidget {
-  const Attributes({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: const [
-        AttributeListTile<Health>(),
-        AttributeListTile<Attack>(),
-        AttributeListTile<Defense>(),
-        AttributeListTile<Magik>(),
-      ],
-    );
-  }
-}
-
+/// Render list tile of character's attribute for edition.
 class AttributeListTile<T extends Attribute> extends ConsumerWidget {
   const AttributeListTile({Key? key}) : super(key: key);
 
@@ -223,6 +209,7 @@ class AttributeListTile<T extends Attribute> extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
+                  key: Key('downgrade_${attribute.label()}'),
                   splashRadius: 16,
                   onPressed: controller.canBeDowngraded<T>()
                       ? () => controller.downgrade<T>()
@@ -230,7 +217,7 @@ class AttributeListTile<T extends Attribute> extends ConsumerWidget {
                   icon: const Icon(Icons.remove),
                 ),
                 IconButton(
-                  key: Key('increment_${attribute.label()}'),
+                  key: Key('upgrade_${attribute.label()}'),
                   splashRadius: 16,
                   onPressed: controller.canBeUpgraded<T>()
                       ? () => controller.upgrade<T>()
