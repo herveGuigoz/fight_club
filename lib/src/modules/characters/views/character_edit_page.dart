@@ -12,9 +12,7 @@ enum Mode { create, update }
 
 /// Character editor for creation.
 class CreateCharacterView extends ConsumerWidget {
-  const CreateCharacterView({
-    Key? key,
-  }) : super(key: key);
+  const CreateCharacterView({Key? key}) : super(key: key);
 
   static Route<Character?> route() {
     return MaterialPageRoute<Character?>(
@@ -127,9 +125,7 @@ class Header extends ConsumerWidget {
 /// Render character's avatar selector.
 /// Only available avatars will be displayed.
 class CharacterAvatar extends ConsumerWidget {
-  const CharacterAvatar({
-    Key? key,
-  }) : super(key: key);
+  const CharacterAvatar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -155,6 +151,7 @@ class CharacterAvatar extends ConsumerWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: IconButton(
+            key: const Key('previous_avatar'),
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: index > 0
                 ? () => controller.setName(avatars[index - 1].name)
@@ -164,6 +161,7 @@ class CharacterAvatar extends ConsumerWidget {
         Align(
           alignment: Alignment.centerRight,
           child: IconButton(
+            key: const Key('next_avatar'),
             icon: const Icon(Icons.arrow_forward_ios),
             onPressed: index < avatars.length - 1
                 ? () => controller.setName(avatars[index + 1].name)
