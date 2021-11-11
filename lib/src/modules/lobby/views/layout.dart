@@ -77,8 +77,8 @@ class RoundListTile extends StatelessWidget {
       ),
       trailing: Text(
         didAttack
-            ? '${round.attacker.health.points} : ${round.defender.health.points}'
-            : '${round.defender.health.points} : ${round.attacker.health.points}',
+            ? '${round.attacker<Health>().points} : ${round.defender<Health>().points}'
+            : '${round.defender<Health>().points} : ${round.attacker<Health>().points}',
         style: textTheme.caption,
       ),
     );

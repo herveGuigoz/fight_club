@@ -106,7 +106,7 @@ void main() {
 
       expect(state.first.level, equals(2));
       expect(state.first.skills, equals(1));
-      expect(state.first.health.points, equals(kDefaultHealthPoints));
+      expect(state.first<Health>().points, equals(kDefaultHealthPoints));
     });
 
     test('when character loss a fight, attribute did not change', () {
@@ -126,7 +126,7 @@ void main() {
 
       expect(state.first.level, equals(1));
       expect(state.first.skills, equals(0));
-      expect(state.first.health.points, equals(kDefaultHealthPoints));
+      expect(state.first<Health>().points, equals(kDefaultHealthPoints));
     });
 
     test('Throw CharactersLengthLimitException when exceed 10 characters', () {

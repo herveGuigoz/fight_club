@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import 'package:meta/meta.dart';
+
+@sealed
 abstract class Attribute {
   const Attribute(this.points);
 
@@ -9,7 +12,7 @@ abstract class Attribute {
 
   String label();
 
-  int get skillsPointCosts => max(1, (points / 5).ceil());
+  int get skillsCost => max(1, (points / 5).ceil());
 
   int operator -(int by) => points - by;
   int operator +(int by) => points + by;
@@ -33,7 +36,7 @@ class Health extends Attribute {
   const Health(int points) : super(points);
 
   @override
-  int get skillsPointCosts => 1;
+  int get skillsCost => 1;
 
   @override
   Health copyWith({int? points}) => Health(points ?? this.points);

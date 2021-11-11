@@ -1,8 +1,21 @@
+import 'dart:async';
+
 import 'package:fight_club/src/core/data/models/models.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockFight extends Mock implements Fight {}
+
+class WrongAttribute extends Attribute {
+  WrongAttribute(int points) : super(points);
+
+  @override
+  Attribute copyWith({int? points}) => this;
+
+  @override
+  String label() => 'WrongAttribute';
+}
 
 void main() {
   group('Session', () {
@@ -24,12 +37,58 @@ void main() {
       expect(sessionA.hashCode != sessionB.hashCode, isTrue);
     });
   });
-  group('Character model', () {
+
+  group('Character', () {
     group('attribute', () {
       final character = Character();
 
-      test('return all attribute to list', () {
+      test('return all attribute', () {
         expect(character.attributes.length, equals(4));
+      });
+
+      group('attributes', () {
+        final character = Character();
+        final attributes = character.attributes;
+
+        test('initial level is 1', () {
+          expect(character.level, equals(1));
+        });
+
+        test('initial skills is 12', () {
+          expect(character.skills, equals(12));
+        });
+
+        test('initial health is 10', () {
+          expect(character<Health>().points, equals(10));
+        });
+
+        test('initial attack is 0', () {
+          expect(character<Attack>().points, equals(0));
+        });
+
+        test('initial defense is 0', () {
+          expect(character<Defense>().points, equals(0));
+        });
+
+        test('initial magik is 0', () {
+          expect(character<Magik>().points, equals(0));
+        });
+
+        test('has Health attribute', () {
+          expect(attributes[Health], isNotNull);
+        });
+
+        test('has Attack attribute', () {
+          expect(attributes[Attack], isNotNull);
+        });
+
+        test('has Defense attribute', () {
+          expect(attributes[Defense], isNotNull);
+        });
+
+        test('has Magik attribute', () {
+          expect(attributes[Magik], isNotNull);
+        });
       });
     });
 
@@ -74,48 +133,268 @@ void main() {
       });
     });
 
-    group('operators', () {
-      test('+ add attribute and remove skills', () {
-        final A = Character(skills: 1, health: 10) + const Health(10);
-        final B = Character(skills: 1, attack: 3) + const Attack(3);
-        final C = Character(skills: 2, defense: 9) + const Defense(9);
-        final D = Character(skills: 7, magik: 32) + const Magik(32);
+    group('upgrade', () {
+      test('add attribute and remove skills', () {
+        final A = Character(skills: 1, health: 10).upgrade<Health>();
+        final B = Character(skills: 1, attack: 3).upgrade<Attack>();
+        final C = Character(skills: 2, defense: 9).upgrade<Defense>();
+        final D = Character(skills: 7, magik: 32).upgrade<Magik>();
 
-        expect(A.health.points, equals(11));
+        expect(A<Health>().points, equals(11));
         expect(A.skills, equals(0));
 
-        expect(B.attack.points, equals(4));
+        expect(B<Attack>().points, equals(4));
         expect(B.skills, equals(0));
 
-        expect(C.defense.points, equals(10));
+        expect(C<Defense>().points, equals(10));
         expect(C.skills, equals(0));
 
-        expect(D.magik.points, equals(33));
+        expect(D<Magik>().points, equals(33));
         expect(D.skills, equals(0));
       });
+    });
 
-      test('- remove attribute and add skills', () {
-        final A = Character(skills: 0, health: 11) - const Health(11);
-        final B = Character(skills: 0, attack: 4) - const Attack(4);
-        final C = Character(skills: 0, defense: 10) - const Defense(10);
-        final D = Character(skills: 0, magik: 33) - const Magik(33);
+    group('downgrade', () {
+      test('remove attribute and add skills', () {
+        final A = Character(skills: 0, health: 11).downgrade<Health>();
+        final B = Character(skills: 0, attack: 4).downgrade<Attack>();
+        final C = Character(skills: 0, defense: 10).downgrade<Defense>();
+        final D = Character(skills: 0, magik: 33).downgrade<Magik>();
 
-        expect(A.health.points, equals(10));
+        expect(A<Health>().points, equals(10));
         expect(A.skills, equals(1));
 
-        expect(B.attack.points, equals(3));
+        expect(B<Attack>().points, equals(3));
         expect(B.skills, equals(1));
 
-        expect(C.defense.points, equals(9));
+        expect(C<Defense>().points, equals(9));
         expect(C.skills, equals(2));
 
-        expect(D.magik.points, equals(32));
+        expect(D<Magik>().points, equals(32));
         expect(D.skills, equals(7));
+      });
+    });
+
+    group('equality', () {
+      test('unit are equals', () {
+        final characterA = Character(id: 'A');
+        final characterB = Character(id: 'A');
+        expect(characterA == characterB, isTrue);
+        expect(characterA.hashCode == characterA.hashCode, isTrue);
+      });
+
+      test('unit are not equals', () {
+        final characterA = Character(skills: 21);
+        final characterB = Character();
+        expect(characterA == characterB, isFalse);
+      });
+
+      test('list are equals', () {
+        final listA = [
+          Character(id: 'A', attack: 1),
+          Character(id: 'A', attack: 2)
+        ];
+        final listB = [
+          Character(id: 'A', attack: 1),
+          Character(id: 'A', attack: 2)
+        ];
+        expect(listEquals(listA, listB), isTrue);
+      });
+
+      test('list are not equals', () {
+        final listA = [Character(attack: 1), Character(attack: 2)];
+        final listB = [Character(attack: 3), Character(attack: 4)];
+        expect(listEquals(listA, listB), isFalse);
+      });
+    });
+
+    group('copyWith', () {
+      test('reference current attributes', () {
+        final characterA = Character(id: 'A');
+        final characterB = Character(id: 'A').copyWith();
+        expect(characterA, equals(characterB));
+      });
+      test('reference new attributes', () {
+        final character = Character().copyWith(
+          level: 2,
+          skills: 99,
+          health: 12,
+          attack: 1,
+          defense: 1,
+          magik: 1,
+        );
+        expect(character.level, equals(2));
+        expect(character.skills, equals(99));
+        expect(character<Health>().points, equals(12));
+        expect(character<Attack>().points, equals(1));
+        expect(character<Defense>().points, equals(1));
+        expect(character<Magik>().points, equals(1));
+      });
+    });
+
+    group('to string', () {
+      test('reference name, skills, level and all attributes', () {
+        expect(
+          RegExp(
+            r'Character\(name:\s\w+,\slevel:\s\d+,\sskills:\s\d+,\sattributes:.+\)$',
+          ).hasMatch(Character().toString()),
+          isTrue,
+        );
+      });
+    });
+
+    group('error', () {
+      test('should throw error if attribute type do not exist', () {
+        final character = Character();
+        Object? error;
+
+        runZonedGuarded(
+          () => character.getAttribute<WrongAttribute>(),
+          (err, _) => error = err,
+        );
+
+        expect(
+          error,
+          isA<AttributeNotFoundException>().having(
+            (dynamic e) => e.toString(),
+            'AttributeNotFoundException override toString()',
+            equals('Undefine attribute of type WrongAttribute'),
+          ),
+        );
       });
     });
   });
 
-  group('Fight model', () {
+  group('Attribute', () {
+    group('skills point cost', () {
+      test('Health(44): costs 1 skill points to increase to 45', () {
+        const health = Health(44);
+        expect(health.skillsCost, equals(1));
+      });
+
+      test('Attack(3): costs 1 skill points to increase to 4', () {
+        const attack = Attack(3);
+        expect(attack.skillsCost, equals(1));
+      });
+
+      test('Defense(9): costs 2 skill points to increase to 10', () {
+        const defense = Defense(9);
+        expect(defense.skillsCost, equals(2));
+      });
+
+      test('Magik(32): costs 7 skill points to increase to 33', () {
+        const magik = Magik(32);
+        expect(magik.skillsCost, equals(7));
+      });
+    });
+
+    group('operators', () {
+      const health = Health(44);
+
+      test('+ increase points by one', () {
+        expect(health + 1, equals(45));
+      });
+
+      test('- decrease points by one', () {
+        expect(health - 1, equals(43));
+      });
+
+      test('> return correct boolean', () {
+        const healthA = Health(2);
+        const healthB = Health(1);
+        expect(healthA > healthB, isTrue);
+        expect(healthB > healthA, isFalse);
+      });
+
+      test('< return correct boolean', () {
+        const healthA = Health(2);
+        const healthB = Health(1);
+        expect(healthA < healthB, isFalse);
+        expect(healthB < healthA, isTrue);
+      });
+
+      test('>= and <= return correct boolean', () {
+        const healthA = Health(1);
+        const healthB = Health(1);
+        expect(healthA <= healthB, isTrue);
+        expect(healthB <= healthA, isTrue);
+        expect(healthA >= healthB, isTrue);
+        expect(healthB >= healthA, isTrue);
+      });
+    });
+
+    group('equality', () {
+      test('unit are equals', () {
+        const attributeA = Health(1);
+        const attributeB = Health(1);
+        expect(attributeA == attributeB, isTrue);
+        expect(attributeA.hashCode == attributeB.hashCode, isTrue);
+      });
+
+      test('unit are not equals', () {
+        const attributeA = Health(21);
+        const attributeB = Health(11);
+        expect(attributeA == attributeB, isFalse);
+      });
+
+      test('list are equals', () {
+        const listA = [Health(1), Health(2)];
+        const listB = [Health(1), Health(2)];
+        expect(listEquals(listA, listB), isTrue);
+      });
+
+      test('list are not equals', () {
+        const listA = [Health(1), Health(2)];
+        const listB = [Health(3), Health(4)];
+        expect(listEquals(listA, listB), isFalse);
+      });
+    });
+
+    group('copyWith', () {
+      test('must override copyWith()', () {
+        const health = Health(0);
+        const attack = Attack(0);
+        const defense = Defense(0);
+        const magik = Magik(0);
+        expect(health.copyWith(), equals(health));
+        expect(health.copyWith(points: 1), equals(const Health(1)));
+        expect(attack.copyWith(), equals(attack));
+        expect(attack.copyWith(points: 1), equals(const Attack(1)));
+        expect(defense.copyWith(), equals(defense));
+        expect(defense.copyWith(points: 1), equals(const Defense(1)));
+        expect(magik.copyWith(), equals(magik));
+        expect(magik.copyWith(points: 1), equals(const Magik(1)));
+      });
+    });
+
+    group('must override label()', () {
+      test('return correct labels', () {
+        const health = Health(44);
+        const attack = Attack(3);
+        const defense = Defense(9);
+        const magik = Magik(21);
+        expect(health.label(), equals('Health'));
+        expect(attack.label(), equals('Attack'));
+        expect(defense.label(), equals('Defense'));
+        expect(magik.label(), equals('Magik'));
+      });
+    });
+
+    group('to string', () {
+      test('return attribute type and points value', () {
+        const health = Health(44);
+        const attack = Attack(3);
+        const defense = Defense(9);
+        const magik = Magik(21);
+        expect(health.toString(), equals('Health(44)'));
+        expect(attack.toString(), equals('Attack(3)'));
+        expect(defense.toString(), equals('Defense(9)'));
+        expect(magik.toString(), equals('Magik(21)'));
+      });
+    });
+  });
+
+  group('Fight', () {
     final now = DateTime.now();
     final characterA = Character(id: 'A');
     final characterB = Character(id: 'B');
@@ -148,7 +427,7 @@ void main() {
     });
   });
 
-  group('FightResult view model', () {
+  group('FightResult', () {
     final characterA = Character(id: 'A');
     final characterB = Character(id: 'B');
     final fight = Fight(date: DateTime.now(), rounds: []);

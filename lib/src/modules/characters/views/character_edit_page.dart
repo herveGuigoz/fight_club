@@ -174,63 +174,74 @@ class CharacterAvatar extends ConsumerWidget {
 }
 
 /// Render list view of character's attribute for edition.
-class Attributes extends ConsumerWidget {
+class Attributes extends StatelessWidget {
   const Attributes({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: const [
+        AttributeListTile<Health>(),
+        AttributeListTile<Attack>(),
+        AttributeListTile<Defense>(),
+        AttributeListTile<Magik>(),
+      ],
+    );
+  }
+}
+
+class AttributeListTile<T extends Attribute> extends ConsumerWidget {
+  const AttributeListTile({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final character = ref.watch(characterControllerProvider);
+    final attribute = ref.watch(characterControllerProvider)<T>();
     final controller = ref.read(characterControllerProvider.notifier);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (final attribute in character.attributes)
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: theme.dividerColor),
-            ),
-            constraints: const BoxConstraints(minHeight: 60),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(attribute.label()),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text('${attribute.points}'),
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        splashRadius: 16,
-                        onPressed: controller.canBeDowngraded(attribute)
-                            ? () => controller.downgrade(attribute)
-                            : null,
-                        icon: const Icon(Icons.remove),
-                      ),
-                      IconButton(
-                        key: Key('increment_${attribute.label()}'),
-                        splashRadius: 16,
-                        onPressed: controller.canBeUpgraded(attribute)
-                            ? () => controller.upgrade(attribute)
-                            : null,
-                        icon: const Icon(Icons.add),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: theme.dividerColor),
+      ),
+      constraints: const BoxConstraints(minHeight: 60),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(attribute.label()),
+          ),
+          Expanded(
+            child: Center(
+              child: Text('${attribute.points}'),
             ),
           ),
-      ],
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  splashRadius: 16,
+                  onPressed: controller.canBeDowngraded<T>()
+                      ? () => controller.downgrade<T>()
+                      : null,
+                  icon: const Icon(Icons.remove),
+                ),
+                IconButton(
+                  key: Key('increment_${attribute.label()}'),
+                  splashRadius: 16,
+                  onPressed: controller.canBeUpgraded<T>()
+                      ? () => controller.upgrade<T>()
+                      : null,
+                  icon: const Icon(Icons.add),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

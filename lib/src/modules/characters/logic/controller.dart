@@ -11,42 +11,29 @@ class CharacterController extends StateNotifier<Character> {
 
   final Character initialState;
 
-  bool canBeUpgraded(Attribute attribute) {
-    return attribute.skillsPointCosts <= state.skills;
-  }
-
-  bool canBeDowngraded(Attribute attribute) {
-    final initial = initialState.attributes.firstWhereSameTypeAs(attribute);
-    final current = state.attributes.firstWhereSameTypeAs(attribute);
-
-    return current.points > initial.points;
-  }
-
   void refresh() => state = initialState;
 
   void setName(String name) {
     state = state.copyWith(name: name);
   }
 
-  void downgrade(Attribute value) {
-    if (canBeDowngraded(value)) {
-      state = state - state.attributes.firstWhereSameTypeAs(value);
+  void downgrade<T extends Attribute>() {
+    if (canBeDowngraded<T>()) {
+      state = state.downgrade<T>();
     }
   }
 
-  void upgrade(Attribute attribute) {
-    if (canBeUpgraded(attribute)) {
-      state = state + attribute;
+  void upgrade<T extends Attribute>() {
+    if (canBeUpgraded<T>()) {
+      state = state.upgrade<T>();
     }
   }
-}
 
-extension AttributeTypeExtension on Attribute {
-  bool sameTypeAs(Attribute other) => runtimeType == other.runtimeType;
-}
+  bool canBeUpgraded<T extends Attribute>() {
+    return state<T>().skillsCost <= state.skills;
+  }
 
-extension IterableAttributeExtension on List<Attribute> {
-  Attribute firstWhereSameTypeAs(Attribute other) {
-    return firstWhere((attribute) => attribute.sameTypeAs(other));
+  bool canBeDowngraded<T extends Attribute>() {
+    return state<T>().points > initialState<T>().points;
   }
 }

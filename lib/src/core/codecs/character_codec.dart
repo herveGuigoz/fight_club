@@ -29,10 +29,10 @@ class CharacterCodec extends JsonCodec<Character> {
       'name': value.name,
       'level': value.level,
       'skills': value.skills,
-      'health': value.health.points,
-      'attack': value.attack.points,
-      'defense': value.defense.points,
-      'magik': value.magik.points,
+      'health': value<Health>().points,
+      'attack': value<Attack>().points,
+      'defense': value<Defense>().points,
+      'magik': value<Magik>().points,
       // 'fights': value.fights.map((x) => _fight.toMap(x)).toList(),
     };
   }

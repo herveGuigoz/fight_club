@@ -39,7 +39,7 @@ class FightService {
     Character characterA = entry.characterA;
     Character characterB = entry.characterB;
 
-    while (characterA.health.points > 0 && characterB.health.points > 0) {
+    while (characterA<Health>().points > 0 && characterB<Health>().points > 0) {
       late final Round roundResult;
 
       if (roundId.isOdd) {
@@ -63,16 +63,16 @@ class FightService {
     Character attacker,
     Character defender,
   ) {
-    if (attacker.attack.points == 0) {
+    if (attacker<Attack>().points == 0) {
       return Round(id: roundId, attacker: attacker, defender: defender);
     }
 
-    final diceResult = dice.roll(attacker.attack.points);
-    int damages = diceResult - defender.defense.points;
+    final diceResult = dice.roll(attacker<Attack>().points);
+    int damages = diceResult - defender<Defense>().points;
     // If the damages equals attacker's magik points amount,
     // this value is added to the damages
-    if (damages == attacker.magik.points) {
-      damages += attacker.magik.points;
+    if (damages == attacker<Magik>().points) {
+      damages += attacker<Magik>().points;
     }
 
     damages = math.max(0, damages);
@@ -83,14 +83,14 @@ class FightService {
       damages: damages,
       attacker: attacker,
       defender: defender.copyWith(
-        health: math.max(0, defender.health.points - damages),
+        health: math.max(0, defender<Health>().points - damages),
       ),
     );
   }
 
   void assertAtLeastOneCharacterCanWin(Character first, Character second) {
-    final firstCanWin = first.attack.points > second.defense.points;
-    final secondCanWin = second.attack.points > first.defense.points;
+    final firstCanWin = first<Attack>().points > second<Defense>().points;
+    final secondCanWin = second<Attack>().points > first<Defense>().points;
 
     if (!firstCanWin && !secondCanWin) throw FightException();
   }

@@ -20,7 +20,7 @@ void main() {
           ],
         );
         final controller = container.read(characterControllerProvider.notifier);
-        expect(controller.canBeUpgraded(character.health), isFalse);
+        expect(controller.canBeUpgraded<Health>(), isFalse);
       });
 
       test('when skill point amount is acalible return true', () {
@@ -33,7 +33,7 @@ void main() {
           ],
         );
         final controller = container.read(characterControllerProvider.notifier);
-        expect(controller.canBeUpgraded(character.health), isTrue);
+        expect(controller.canBeUpgraded<Health>(), isTrue);
       });
     });
 
@@ -49,7 +49,7 @@ void main() {
         );
         final controller = container.read(characterControllerProvider.notifier);
 
-        expect(controller.canBeDowngraded(character.health), isFalse);
+        expect(controller.canBeDowngraded<Health>(), isFalse);
       });
 
       test('when attribute changed return true', () {
@@ -62,9 +62,8 @@ void main() {
           ],
         );
         final controller = container.read(characterControllerProvider.notifier);
-        controller.upgrade(character.health);
-        final update = container.read(characterControllerProvider);
-        expect(controller.canBeDowngraded(update.health), isTrue);
+        controller.upgrade<Health>();
+        expect(controller.canBeDowngraded<Health>(), isTrue);
       });
     });
 
@@ -83,30 +82,30 @@ void main() {
       });
 
       test('health skill', () {
-        controller.upgrade(character.health);
+        controller.upgrade<Health>();
         final updatedCharacter = container.read(characterControllerProvider);
-        expect(updatedCharacter.health.points, equals(11));
+        expect(updatedCharacter<Health>().points, equals(11));
         expect(updatedCharacter.skills, equals(11));
       });
 
       test('attack skill', () {
-        controller.upgrade(character.attack);
+        controller.upgrade<Attack>();
         final updatedCharacter = container.read(characterControllerProvider);
-        expect(updatedCharacter.attack.points, equals(1));
+        expect(updatedCharacter<Attack>().points, equals(1));
         expect(updatedCharacter.skills, equals(11));
       });
 
       test('defense skill', () {
-        controller.upgrade(character.defense);
+        controller.upgrade<Defense>();
         final updatedCharacter = container.read(characterControllerProvider);
-        expect(updatedCharacter.defense.points, equals(1));
+        expect(updatedCharacter<Defense>().points, equals(1));
         expect(updatedCharacter.skills, equals(11));
       });
 
       test('magik skill', () {
-        controller.upgrade(character.magik);
+        controller.upgrade<Magik>();
         final updatedCharacter = container.read(characterControllerProvider);
-        expect(updatedCharacter.magik.points, equals(1));
+        expect(updatedCharacter<Magik>().points, equals(1));
         expect(updatedCharacter.skills, equals(11));
       });
     });
@@ -125,34 +124,34 @@ void main() {
           ],
         );
         controller = container.read(characterControllerProvider.notifier);
-        controller.upgrade(character.health);
-        controller.upgrade(character.attack);
-        controller.upgrade(character.defense);
-        controller.upgrade(character.magik);
+        controller.upgrade<Health>();
+        controller.upgrade<Attack>();
+        controller.upgrade<Defense>();
+        controller.upgrade<Magik>();
       });
 
       test('health skill', () {
-        controller.downgrade(character.health);
+        controller.downgrade<Health>();
         final update = container.read(characterControllerProvider);
-        expect(update.health.points, equals(character.health.points));
+        expect(update<Health>().points, equals(character<Health>().points));
       });
 
       test('attack skill', () {
-        controller.downgrade(character.attack);
+        controller.downgrade<Attack>();
         final update = container.read(characterControllerProvider);
-        expect(update.attack.points, equals(character.attack.points));
+        expect(update<Attack>().points, equals(character<Attack>().points));
       });
 
       test('defense skill', () {
-        controller.downgrade(character.defense);
+        controller.downgrade<Defense>();
         final update = container.read(characterControllerProvider);
-        expect(update.defense.points, equals(character.defense.points));
+        expect(update<Defense>().points, equals(character<Defense>().points));
       });
 
       test('magik skill', () {
-        controller.downgrade(character.magik);
+        controller.downgrade<Magik>();
         final update = container.read(characterControllerProvider);
-        expect(update.magik.points, equals(character.magik.points));
+        expect(update<Magik>().points, equals(character<Magik>().points));
       });
     });
 
@@ -167,23 +166,23 @@ void main() {
           ],
         );
         final controller = container.read(characterControllerProvider.notifier);
-        controller.upgrade(character.health);
-        controller.upgrade(character.attack);
-        controller.upgrade(character.defense);
-        controller.upgrade(character.magik);
+        controller.upgrade<Health>();
+        controller.upgrade<Attack>();
+        controller.upgrade<Defense>();
+        controller.upgrade<Magik>();
 
         final stateA = container.read(characterControllerProvider);
-        expect(stateA.health.points, equals(11));
-        expect(stateA.attack.points, equals(1));
-        expect(stateA.defense.points, equals(1));
-        expect(stateA.magik.points, equals(1));
+        expect(stateA<Health>().points, equals(11));
+        expect(stateA<Attack>().points, equals(1));
+        expect(stateA<Defense>().points, equals(1));
+        expect(stateA<Magik>().points, equals(1));
 
         controller.refresh();
         final stateB = container.read(characterControllerProvider);
-        expect(stateB.health.points, equals(10));
-        expect(stateB.attack.points, equals(0));
-        expect(stateB.defense.points, equals(0));
-        expect(stateB.magik.points, equals(0));
+        expect(stateB<Health>().points, equals(10));
+        expect(stateB<Attack>().points, equals(0));
+        expect(stateB<Defense>().points, equals(0));
+        expect(stateB<Magik>().points, equals(0));
       });
     });
 

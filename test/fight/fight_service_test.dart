@@ -57,7 +57,7 @@ void main() {
         );
 
         expect(
-          rounds.any((round) => round.diceResult > A.attack.points),
+          rounds.any((round) => round.diceResult > A<Attack>().points),
           isFalse,
         );
       });
@@ -78,7 +78,7 @@ void main() {
 
             final round = FightService.processRound(1, characterA, characterB);
             expect(
-              round.defender.health.points,
+              round.defender<Health>().points,
               equals(health - (attack - defense)),
             );
           },
@@ -100,7 +100,7 @@ void main() {
 
             final round = FightService.processRound(1, characterA, characterB);
             expect(round.damages, equals(14));
-            expect(round.defender.health.points, equals(10));
+            expect(round.defender<Health>().points, equals(10));
           },
         );
       });
@@ -136,7 +136,7 @@ void main() {
           final rounds = FightService.processFight(IsolateEntry(A, B));
           final roundsWithHealthPointsSmallerThanOne = <Round>[];
           for (final round in rounds) {
-            if (round.defender.health.points < 1) {
+            if (round.defender<Health>().points < 1) {
               roundsWithHealthPointsSmallerThanOne.add(round);
             }
           }

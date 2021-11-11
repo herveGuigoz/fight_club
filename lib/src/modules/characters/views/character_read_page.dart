@@ -98,7 +98,7 @@ class _AttributesLayoutState extends ConsumerState<AttributesLayout> {
               label: 'Skills',
               value: character.skills,
             ),
-            for (final attribute in character.attributes)
+            for (final attribute in character.attributes.values)
               OutlinedListTile(
                 label: attribute.label(),
                 value: attribute.points,

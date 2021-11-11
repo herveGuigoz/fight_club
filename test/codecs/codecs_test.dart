@@ -36,10 +36,10 @@ void main() {
       expect(character.name, equals('Anonymous'));
       expect(character.level, equals(7));
       expect(character.skills, equals(0));
-      expect(character.health.points, equals(10));
-      expect(character.attack.points, equals(9));
-      expect(character.defense.points, equals(4));
-      expect(character.magik.points, equals(8));
+      expect(character<Health>().points, equals(10));
+      expect(character<Attack>().points, equals(9));
+      expect(character<Defense>().points, equals(4));
+      expect(character<Magik>().points, equals(8));
       expect(character.fights, equals([]));
     });
 

@@ -17,22 +17,49 @@ class Character extends Model {
     int defense = 0,
     int magik = 0,
     this.fights = const [],
-  })  : health = Health(health),
-        attack = Attack(attack),
-        defense = Defense(defense),
-        magik = Magik(magik),
+  })  : attributes = {
+          Health: Health(health),
+          Attack: Attack(attack),
+          Defense: Defense(defense),
+          Magik: Magik(magik)
+        },
         super(id ?? const Uuid().v4());
+
+  /// Private constructor used to upgrade/downgrade attributes.
+  Character._({
+    required String id,
+    required this.name,
+    required this.level,
+    required this.skills,
+    required this.attributes,
+    required this.fights,
+  }) : super(id);
 
   final String name;
   final int level;
   final int skills;
-  final Health health;
-  final Attack attack;
-  final Defense defense;
-  final Magik magik;
+  final Map<Type, Attribute> attributes;
   final List<Fight> fights;
 
-  List<Attribute> get attributes => [health, attack, defense, magik];
+  /// Shortcut for character.getAttribute<T>()
+  /// ```dart
+  ///   final character = Character();
+  ///   final attribute = character<Health>();
+  /// ```
+  /// equals
+  /// ```dart
+  ///   final character = Character();
+  ///   final attribute = character.getAttribute<Health>();
+  /// ```
+  Attribute call<T extends Attribute>() => getAttribute<T>();
+
+  /// Retrieve [Attribute] of type [T]
+  Attribute getAttribute<T extends Attribute>() {
+    if (!attributes.containsKey(typeOf<T>())) {
+      throw AttributeNotFoundException<T>();
+    }
+    return attributes[typeOf<T>()]!;
+  }
 
   Fight? get lastFight {
     if (fights.isNotEmpty) {
@@ -45,6 +72,40 @@ class Character extends Model {
     final didFight = lastFight?.date.isAfter(oneHourAgo) ?? false;
 
     return didFight && !lastFight!.didWin(this);
+  }
+
+  /// Return a copy of this character with attribute of type [T] downgraded
+  /// by one and skills updated accordingly.
+  Character downgrade<T extends Attribute>() {
+    final current = getAttribute<T>();
+    final update = current.copyWith(points: current.points - 1);
+    assert(update.points >= 0);
+
+    return Character._(
+      id: id,
+      name: name,
+      level: level,
+      skills: skills + update.skillsCost,
+      attributes: Map.from(attributes)..update(typeOf<T>(), (_) => update),
+      fights: fights,
+    );
+  }
+
+  /// Return a copy of this character with attribute of type [T] upgraded
+  /// by one and skills updated accordingly.
+  Character upgrade<T extends Attribute>() {
+    final current = getAttribute<T>();
+    final update = current.copyWith(points: current.points + 1);
+    assert(skills >= current.skillsCost);
+
+    return Character._(
+      id: id,
+      name: name,
+      level: level,
+      skills: skills - current.skillsCost,
+      attributes: Map.from(attributes)..update(typeOf<T>(), (_) => update),
+      fights: fights,
+    );
   }
 
   Character copyWith({
@@ -63,38 +124,17 @@ class Character extends Model {
       name: name ?? this.name,
       level: level ?? this.level,
       skills: skills ?? this.skills,
-      health: health ?? this.health.points,
-      attack: attack ?? this.attack.points,
-      defense: defense ?? this.defense.points,
-      magik: magik ?? this.magik.points,
+      health: health ?? getAttribute<Health>().points,
+      attack: attack ?? getAttribute<Attack>().points,
+      defense: defense ?? getAttribute<Defense>().points,
+      magik: magik ?? getAttribute<Magik>().points,
       fights: fights ?? this.fights,
     );
   }
 
   @override
   String toString() {
-    return 'Character(name: $name, level: $level, skills: $skills, attributes: $health, $attack, $defense, $magik)';
-  }
-
-  Character operator +(Attribute attribute) {
-    return copyWith(
-      skills: skills - attribute.skillsPointCosts,
-      health: attribute is Health ? health + 1 : health.points,
-      attack: attribute is Attack ? attack + 1 : attack.points,
-      defense: attribute is Defense ? defense + 1 : defense.points,
-      magik: attribute is Magik ? magik + 1 : magik.points,
-    );
-  }
-
-  Character operator -(Attribute attribute) {
-    final previousAttribute = attribute.copyWith(points: attribute.points - 1);
-    return copyWith(
-      skills: skills + previousAttribute.skillsPointCosts,
-      health: attribute is Health ? previousAttribute.points : health.points,
-      attack: attribute is Attack ? previousAttribute.points : attack.points,
-      defense: attribute is Defense ? previousAttribute.points : defense.points,
-      magik: attribute is Magik ? previousAttribute.points : magik.points,
-    );
+    return 'Character(name: $name, level: $level, skills: $skills, attributes: ${attributes.values})';
   }
 
   @override
@@ -106,10 +146,7 @@ class Character extends Model {
         other.name == name &&
         other.level == level &&
         other.skills == skills &&
-        other.health == health &&
-        other.attack == attack &&
-        other.defense == defense &&
-        other.magik == magik &&
+        mapEquals(other.attributes, attributes) &&
         listEquals(other.fights, fights);
   }
 
@@ -119,10 +156,14 @@ class Character extends Model {
         name.hashCode ^
         level.hashCode ^
         skills.hashCode ^
-        health.hashCode ^
-        attack.hashCode ^
-        defense.hashCode ^
-        magik.hashCode ^
+        attributes.hashCode ^
         fights.hashCode;
   }
+}
+
+Type typeOf<T>() => T;
+
+class AttributeNotFoundException<T extends Attribute> implements Exception {
+  @override
+  String toString() => 'Undefine attribute of type $T';
 }

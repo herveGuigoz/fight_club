@@ -120,25 +120,25 @@ void main() {
       testWidgets('should display character health', (tester) async {
         await tester.pumpApp(AttributesLayout(character: character));
         expect(find.text('Health'), findsOneWidget);
-        expect(find.text('${character.health.points}'), findsOneWidget);
+        expect(find.text('${character<Health>().points}'), findsOneWidget);
       });
 
       testWidgets('should display character attack', (tester) async {
         await tester.pumpApp(AttributesLayout(character: character));
         expect(find.text('Attack'), findsOneWidget);
-        expect(find.text('${character.attack.points}'), findsOneWidget);
+        expect(find.text('${character<Attack>().points}'), findsOneWidget);
       });
 
       testWidgets('should display character defense', (tester) async {
         await tester.pumpApp(AttributesLayout(character: character));
         expect(find.text('Defense'), findsOneWidget);
-        expect(find.text('${character.defense.points}'), findsOneWidget);
+        expect(find.text('${character<Defense>().points}'), findsOneWidget);
       });
 
       testWidgets('should display character magik', (tester) async {
         await tester.pumpApp(AttributesLayout(character: character));
         expect(find.text('Magik'), findsOneWidget);
-        expect(find.text('${character.magik.points}'), findsOneWidget);
+        expect(find.text('${character<Magik>().points}'), findsOneWidget);
       });
 
       testWidgets('should display edit button', (tester) async {
@@ -170,11 +170,11 @@ void main() {
 
         expect(find.byType(EditCharacterView), findsNothing);
         expect(find.byType(AttributesLayout), findsOneWidget);
-        expect(find.text('${character.health.points + 1}'), findsOneWidget);
+        expect(find.text('${character<Health>().points + 1}'), findsOneWidget);
         verify(
           () => authController.updateCharacter(character.copyWith(
             skills: character.skills - 1,
-            health: character.health.points + 1,
+            health: character<Health>().points + 1,
           )),
         ).called(1);
       });
