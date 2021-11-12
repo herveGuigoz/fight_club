@@ -9,6 +9,7 @@ import 'package:fight_club/src/modules/lobby/lobby.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../helpers/helpers.dart';
 import '../../helpers/pump_app.dart';
@@ -96,6 +97,94 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(LobbyView), findsOneWidget);
+    });
+  });
+
+  group('Lobby', () {
+    const codec = SessionCodec();
+    testWidgets('should be alowed to select another character', (tester) async {
+      final characterA = Character(name: 'Stormtrooper');
+      final characterB = Character(name: 'Yoda');
+      final controller = StateProvider<Character?>((ref) {
+        final characters = ref.watch(availableCharactersProvider);
+        return characters.isNotEmpty ? characters.first : null;
+      });
+
+      setUpStorage(
+        onRead: codec.toMap(Session(characters: [characterA, characterB])),
+      );
+
+      late final WidgetRef widgetRef;
+
+      await tester.pumpApp(Consumer(
+        builder: (context, ref, child) {
+          widgetRef = ref;
+          return const Home();
+        },
+      ), overrides: [
+        selectedCharacterProvider.overrideWithProvider(controller)
+      ]);
+
+      expect(widgetRef.read(selectedCharacterProvider), equals(characterA));
+
+      await tester.tap(find.text('Lobby'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.text('${characterA.name} - level ${characterA.level}'),
+      );
+
+      // finish the menu animation
+      await tester.pump(const Duration(seconds: 1));
+
+      await tester.tap(
+        find.text('${characterB.name} - level ${characterB.level}').last,
+      );
+
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(widgetRef.read(selectedCharacterProvider), equals(characterB));
+    });
+
+    testWidgets('Fight button should not be visible', (tester) async {
+      setUpStorage(onRead: codec.toMap(const Session(characters: [])));
+      await tester.pumpApp(const Home());
+      await tester.tap(find.text('Lobby'));
+      await tester.pumpAndSettle();
+      expect(find.byType(TextButton), findsNothing);
+    });
+
+    testWidgets('Fight button should be enable', (tester) async {
+      final character = Character(name: 'Stormtrooper');
+      setUpStorage(
+        onRead: codec.toMap(Session(characters: [character])),
+      );
+      await tester.pumpApp(const Home());
+      await tester.tap(find.text('Lobby'));
+      await tester.pumpAndSettle();
+      expect(find.byType(TextButton), findsOneWidget);
+    });
+
+    testWidgets('Fight button should push to FightResultView', (tester) async {
+      final characterA = Character(name: 'Stormtrooper');
+      final characterB = Character(name: 'Yoda');
+      final fightResult = FightResult(
+        character: characterA,
+        opponent: characterB,
+        didWin: true,
+        fight: Fight(date: DateTime.now()),
+      );
+
+      setUpStorage(
+        onRead: codec.toMap(Session(characters: [characterA])),
+      );
+      await tester.pumpApp(const Home(), overrides: [
+        fightResultProvider.overrideWithValue(AsyncData(fightResult)),
+      ]);
+      await tester.tap(find.text('Lobby'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(TextButton));
+      await tester.pumpAndSettle();
+      expect(find.byType(FightResultView), findsOneWidget);
     });
   });
 }
