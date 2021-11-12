@@ -23,7 +23,7 @@ class Faker {
   /// Generates a fake [Character].
   static Character character({int maxFightsCount = 20}) {
     // compute number of wins
-    final wins = Random.integer(maxFightsCount);
+    final wins = Random.integer(maxFightsCount + 1);
 
     // compute number of losses
     final losses = maxFightsCount - wins;
