@@ -9,12 +9,21 @@ class MockDice extends Mock implements Dice {}
 void main() {
   group('FightService', () {
     group('dice:', () {
-      test('result is always in range 1 - max', () {
-        for (var max = 1; max < 10; max++) {
+      test('result is always in range 1 ~ max', () {
+        for (var max = 1; max < 100; max++) {
           final result = const Dice().roll(max);
           expect(result >= 1, isTrue);
           expect(result <= max, isTrue);
         }
+      });
+
+      test('return max inclusive value', () {
+        final integers = <int>[];
+        for (var i = 1; i < 10; i++) {
+          final result = const Dice().roll(2);
+          integers.add(result);
+        }
+        expect(integers.any((integer) => integer == 2), isTrue);
       });
     });
     group('processRound:', () {

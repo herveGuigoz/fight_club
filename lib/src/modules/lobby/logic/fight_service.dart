@@ -99,7 +99,8 @@ class FightService {
 class Dice {
   const Dice();
 
-  int roll(int max) => Random.integer(max, min: 1);
+  /// Generates a random integer between 1 ~ max (inclusive).
+  int roll(int max) => Random.integer(max + 1, min: 1);
 }
 
 class IsolateEntry {
