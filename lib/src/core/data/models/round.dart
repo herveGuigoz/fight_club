@@ -1,7 +1,11 @@
-import 'package:fight_club/src/core/data/models/models.dart';
+// ignore_for_file: lines_longer_than_80_chars
 
+import 'package:fight_club/src/core/data/models/models.dart';
+import 'package:meta/meta.dart';
+
+@immutable
 class Round {
-  Round({
+  const Round({
     required this.id,
     this.diceResult = 0,
     this.damages = 0,

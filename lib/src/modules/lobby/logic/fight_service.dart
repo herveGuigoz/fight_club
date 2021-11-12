@@ -25,8 +25,9 @@ class FightService {
     final fight = Fight(date: DateTime.now(), rounds: rounds);
 
     for (final observer in observers) {
-      observer.didFight(user, fight);
-      observer.didFight(opponent, fight);
+      observer
+        ..didFight(user, fight)
+        ..didFight(opponent, fight);
     }
 
     return fight;
@@ -35,9 +36,9 @@ class FightService {
   @visibleForTesting
   static List<Round> processFight(IsolateEntry entry) {
     final rounds = <Round>[];
-    int roundId = 1;
-    Character characterA = entry.characterA;
-    Character characterB = entry.characterB;
+    var roundId = 1;
+    var characterA = entry.characterA;
+    var characterB = entry.characterB;
 
     while (characterA<Health>().points > 0 && characterB<Health>().points > 0) {
       late final Round roundResult;
@@ -68,7 +69,7 @@ class FightService {
     }
 
     final diceResult = dice.roll(attacker<Attack>().points);
-    int damages = diceResult - defender<Defense>().points;
+    var damages = diceResult - defender<Defense>().points;
     // If the damages equals attacker's magik points amount,
     // this value is added to the damages
     if (damages == attacker<Magik>().points) {

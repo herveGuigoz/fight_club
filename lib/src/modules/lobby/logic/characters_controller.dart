@@ -1,11 +1,10 @@
 import 'dart:math';
 
-import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:fight_club/src/core/data/faker.dart';
+import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:fight_club/src/core/data/random_generator.dart';
+import 'package:fight_club/src/modules/lobby/logic/fight_observer.dart';
 import 'package:flutter/foundation.dart';
-
-import 'fight_observer.dart';
 
 /// Manage a the list of 1000 fake characters
 class CharactersController implements FightObserver {

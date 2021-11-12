@@ -20,12 +20,12 @@ void main() {
       test('The character has to be free', () async {
         final fight = MockFight();
         final characterA = Character(fights: [fight]);
-        final characterB = Character(level: 100, fights: []);
+        final characterB = Character(level: 100);
         when(() => fight.didWin(characterA)).thenReturn(false);
         when(() => fight.date).thenReturn(DateTime.now());
 
         final controller = CharactersController([characterA, characterB]);
-        final theOne = await controller.findOpponentFor(Character(level: 1));
+        final theOne = await controller.findOpponentFor(Character());
         expect(theOne, equals(characterB));
       });
 
@@ -54,8 +54,8 @@ void main() {
           ],
         );
 
-        Character characterA = Character(id: 'characterA', fights: [fightB]);
-        Character characterB = Character(id: 'characterB', fights: [fightA]);
+        final characterA = Character(id: 'characterA', fights: [fightB]);
+        final characterB = Character(id: 'characterB', fights: [fightA]);
 
         expect(characterA.didLooseFightInPastHour(), isTrue);
         expect(characterB.didLooseFightInPastHour(), isTrue);
@@ -67,7 +67,7 @@ void main() {
       });
 
       test('Take the closest opponent based on rank value', () async {
-        final characterA = Character(level: 1);
+        final characterA = Character(level: 2);
         final characterB = Character(level: 25);
         final characterC = Character(level: 12);
 
@@ -88,10 +88,7 @@ void main() {
           fights: [fight],
         );
 
-        final characterB = Character(
-          level: 10,
-          fights: [],
-        );
+        final characterB = Character(level: 10);
 
         final characterC = Character(
           id: 'B',

@@ -22,7 +22,7 @@ Storage setUpStorage({
     (_) async => onDelete?.call(_),
   );
 
-  when(() => storage.clear()).thenAnswer(
+  when(storage.clear).thenAnswer(
     (_) async => onClear?.call(_),
   );
 

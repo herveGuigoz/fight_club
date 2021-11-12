@@ -1,10 +1,9 @@
 import 'dart:math';
 
 import 'package:fight_club/src/core/codecs/session_codec.dart';
-import 'package:fight_club/src/modules/lobby/logic/fight_observer.dart';
-
 import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:fight_club/src/core/storage/storage.dart';
+import 'package:fight_club/src/modules/lobby/logic/fight_observer.dart';
 
 const kCharactersLengthLimit = 10;
 

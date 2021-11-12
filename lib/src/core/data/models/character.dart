@@ -1,11 +1,13 @@
-import 'package:flutter/foundation.dart';
-import 'package:uuid/uuid.dart';
+// ignore_for_file: lines_longer_than_80_chars
 
 import 'package:fight_club/src/core/data/models/models.dart';
+import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 
 const kDefaultSkillsPoints = 12;
 const kDefaultHealthPoints = 10;
 
+@immutable
 class Character extends Model {
   Character({
     String? id,
@@ -26,7 +28,7 @@ class Character extends Model {
         super(id ?? const Uuid().v4());
 
   /// Private constructor used to upgrade/downgrade attributes.
-  Character._({
+  const Character._({
     required String id,
     required this.name,
     required this.level,
@@ -79,7 +81,11 @@ class Character extends Model {
   Character downgrade<T extends Attribute>() {
     final current = getAttribute<T>();
     final update = current.copyWith(points: current.points - 1);
-    assert(update.points >= 0);
+
+    assert(
+      update.points >= 0,
+      'Dont downgrade initial attributes',
+    );
 
     return Character._(
       id: id,
@@ -96,7 +102,11 @@ class Character extends Model {
   Character upgrade<T extends Attribute>() {
     final current = getAttribute<T>();
     final update = current.copyWith(points: current.points + 1);
-    assert(skills >= current.skillsCost);
+
+    assert(
+      skills >= current.skillsCost,
+      'Dont upgrade attribute when missing skills',
+    );
 
     return Character._(
       id: id,

@@ -28,16 +28,18 @@ void main() {
 
     group('migration', () {
       test('returns correct value when file exists', () async {
-        final file = File('${storageDirectory.path}/.storage.json');
-
-        file.writeAsStringSync(json.encode({
-          'CounterLogic': json.encode({'value': 4})
-        }));
+        File('${storageDirectory.path}/.storage.json').writeAsStringSync(
+          json.encode(
+            {
+              'CounterLogic': json.encode({'value': 4})
+            },
+          ),
+        );
 
         storage = await HydratedStorage.build(
           storageDirectory: storageDirectory,
         );
-        expect(storage.read('CounterLogic')['value'] as int, 4);
+        expect((storage.read('CounterLogic') as Map)['value'], 4);
       });
     });
 
@@ -61,12 +63,15 @@ void main() {
           'does not call Hive.init '
           'when storageDirectory is webStorageDirectory', () async {
         final completer = Completer<void>();
-        await runZonedGuarded(() {
-          HydratedStorage.build(
-            storageDirectory: HydratedStorage.webStorageDirectory,
-          ).whenComplete(completer.complete);
-          return completer.future;
-        }, (Object _, StackTrace __) {});
+        await runZonedGuarded(
+          () {
+            HydratedStorage.build(
+              storageDirectory: HydratedStorage.webStorageDirectory,
+            ).whenComplete(completer.complete);
+            return completer.future;
+          },
+          (Object _, StackTrace __) {},
+        );
         expect(HiveImpl().homePath, isNull);
         storage = await HydratedStorage.build(
           storageDirectory: storageDirectory,

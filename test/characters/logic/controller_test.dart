@@ -1,3 +1,5 @@
+// ignore_for_file: cascade_invocations
+
 import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:fight_club/src/modules/authentication/authentication.dart';
 import 'package:fight_club/src/modules/characters/characters.dart';
@@ -11,7 +13,7 @@ void main() {
   group('Character controller', () {
     group('canBeUpgraded', () {
       test('when skill point amount is not enought return false', () {
-        final character = Character(skills: 0, health: 10);
+        final character = Character(skills: 0);
         final container = createContainer(
           overrides: [
             characterControllerProvider.overrideWithValue(
@@ -24,7 +26,7 @@ void main() {
       });
 
       test('when skill point amount is acalible return true', () {
-        final character = Character(skills: 10, health: 10);
+        final character = Character(skills: 10);
         final container = createContainer(
           overrides: [
             characterControllerProvider.overrideWithValue(
@@ -39,7 +41,7 @@ void main() {
 
     group('canBeDowngraded', () {
       test('when attribute did not changed return false', () {
-        final character = Character(skills: 10, health: 10);
+        final character = Character(skills: 10);
         final container = createContainer(
           overrides: [
             characterControllerProvider.overrideWithValue(
@@ -53,7 +55,7 @@ void main() {
       });
 
       test('when attribute changed return true', () {
-        final character = Character(skills: 10, health: 10);
+        final character = Character(skills: 10);
         final container = createContainer(
           overrides: [
             characterControllerProvider.overrideWithValue(
@@ -63,7 +65,10 @@ void main() {
         );
         final controller = container.read(characterControllerProvider.notifier);
         controller.upgrade<Health>();
-        expect(controller.canBeDowngraded<Health>(), isTrue);
+        expect(
+          controller.canBeDowngraded<Health>(),
+          isTrue,
+        );
       });
     });
 
@@ -73,11 +78,13 @@ void main() {
       late CharacterController controller;
 
       setUp(() {
-        container = createContainer(overrides: [
-          characterControllerProvider.overrideWithValue(
-            CharacterController(initialState: character),
-          )
-        ]);
+        container = createContainer(
+          overrides: [
+            characterControllerProvider.overrideWithValue(
+              CharacterController(initialState: character),
+            )
+          ],
+        );
         controller = container.read(characterControllerProvider.notifier);
       });
 
@@ -157,7 +164,7 @@ void main() {
 
     group('refresh', () {
       test('reset to initial state', () {
-        final character = Character(skills: 10, health: 10);
+        final character = Character(skills: 10);
         final container = createContainer(
           overrides: [
             characterControllerProvider.overrideWithValue(

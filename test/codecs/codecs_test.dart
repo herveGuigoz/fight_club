@@ -10,10 +10,8 @@ void main() {
 
     final character = Character(
       id: 'id',
-      name: 'Anonymous',
       level: 7,
       skills: 0,
-      health: 10,
       attack: 9,
       defense: 4,
       magik: 8,
@@ -40,7 +38,7 @@ void main() {
       expect(character<Attack>().points, equals(9));
       expect(character<Defense>().points, equals(4));
       expect(character<Magik>().points, equals(8));
-      expect(character.fights, equals([]));
+      expect(character.fights, equals(<Fight>[]));
     });
 
     test('format correct json', () {
@@ -51,11 +49,11 @@ void main() {
     final date = DateTime.now();
     const codec = FightCodec();
 
-    final fight = Fight(date: date, rounds: []);
+    final fight = Fight(date: date);
 
     final json = <String, Object>{
-      "date": date.millisecondsSinceEpoch,
-      "rounds": [],
+      'date': date.millisecondsSinceEpoch,
+      'rounds': <Round>[],
     };
 
     test('encode to string', () {

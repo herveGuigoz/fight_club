@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:meta/meta.dart';
 
-@sealed
+@immutable
 abstract class Attribute {
   const Attribute(this.points);
 

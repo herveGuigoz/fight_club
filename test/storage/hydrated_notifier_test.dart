@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:path/path.dart' as path;
+
 import 'package:fight_club/src/core/storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:path/path.dart' as path;
 
 import '../helpers/helpers.dart';
 import 'notifiers.dart';
@@ -473,12 +474,11 @@ void main() {
     });
 
     group('Error', () {
-      setUp(() => setUpStorage());
+      setUp(setUpStorage);
 
       test('call onError', () {
         final listener = ErrorListener();
-        final logic = MyErrorLogic()..onError = listener;
-        logic.increment();
+        (MyErrorLogic()..onError = listener).increment();
         verify(() => listener.call(any(), any())).called(1);
       });
 
@@ -498,8 +498,7 @@ void main() {
 
       test('throws unsupported error', () {
         Object? error;
-        final logic = BadNotifier()..onError = (e, _) => error = e;
-        logic.setBad(VeryBadObject());
+        (BadNotifier()..onError = (e, _) => error = e).setBad(VeryBadObject());
         expect(error, isA<HydratedUnsupportedError>());
       });
 
@@ -514,7 +513,7 @@ void main() {
         expect(
           error,
           isA<HydratedUnsupportedError>().having(
-            (dynamic e) => e.cause,
+            (e) => e.cause,
             'cycle2 -> cycle1 -> cycle2 ->',
             isA<HydratedCyclicError>(),
           ),

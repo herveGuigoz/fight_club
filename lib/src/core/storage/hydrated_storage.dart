@@ -62,6 +62,7 @@ class HydratedStorage implements Storage {
 
   static Future _migrate(Directory directory, Box box) async {
     final file = File('${directory.path}/.storage.json');
+    // ignore: avoid_slow_async_io
     if (await file.exists()) {
       try {
         final dynamic storageJson = json.decode(await file.readAsString());

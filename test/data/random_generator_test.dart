@@ -10,7 +10,7 @@ void main() {
     });
 
     test('pick a random key from the given map', () {
-      final map = Map.fromIterable([1, 2, 3]);
+      final map = Map<int, int>.fromIterable(<int>[1, 2, 3]);
       final key = Random.mapElementKey(map);
       expect(map.keys.contains(key), isTrue);
     });
