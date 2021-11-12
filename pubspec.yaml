@@ -10,14 +10,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_localizations:
-    sdk: flutter
   flutter_riverpod: ^1.0.0
   gap: ^2.0.0
   hive: ^2.0.4
   meta: ^1.7.0
   path_provider: ^2.0.5
-  path_to_regexp: ^0.4.0
   synchronized: ^3.0.0
   theme:
     path: packages/theme
@@ -31,10 +28,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-  # Enable generation of localized Strings from arb files.
-  generate: true
-
-  assets:
-    # Add assets from the images directory to the application.
-    - assets/images/

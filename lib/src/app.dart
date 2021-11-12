@@ -15,7 +15,6 @@ class FightClub extends ConsumerWidget {
     return MaterialApp(
       restorationScopeId: 'fight_club',
       debugShowCheckedModeBanner: false,
-      supportedLocales: const [Locale('en', '')],
       theme: AppThemeData.dark,
       darkTheme: AppThemeData.dark,
       onGenerateRoute: (settings) {
