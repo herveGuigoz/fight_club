@@ -507,7 +507,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: theme
+      path: "packages/theme"
       relative: true
     source: path
     version: "1.0.0+1"
