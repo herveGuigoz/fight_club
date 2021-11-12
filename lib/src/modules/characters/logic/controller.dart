@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Logic for editing charater's attributes.
 /// Attribute could be upgraded by one only if has enought skills points.
-/// Attribute could be downgraded by one only if previously modified.
+/// Attribute could be downgraded by one only if attribute was previously
+/// modified.
 class CharacterController extends StateNotifier<Character> {
   CharacterController({
     required this.initialState,
