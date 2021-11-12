@@ -1,9 +1,37 @@
 # fight_club
 
-A simple RPG character creator and idle game.
+A simple RPG character creator and idle game made with Flutter.
+
+This application run on Android, Ios and Macos.
 
 ---
 
+## Requirements
+
+- Dart >= 2.14.0
+- Flutter >= 2.0.0
+
+---
+
+## Dependencies
+
+### [Riverpod](https://github.com/rrousselGit/river_pod)
+
+Well tested and maintained state management and dependency injection library by Remi Rousselet, creator of provider package.
+
+### [Hive](https://github.com/hivedb/hive)
+
+Popular storage library for Dart application.
+
+---
+
+## Installation
+
+```sh
+flutter pub get && flutter run
+```
+
+---
 ## Running Tests 🧪
 
 To run all unit and widget tests use the following command:
@@ -23,3 +51,11 @@ open coverage/index.html
 ```
 
 ---
+
+## Continuous Integration
+
+This project run Github Action on push and pull request in order to:
+
+- Analyze code with lint rules
+- Run the tests
+- Enforce 100% code coverage threshold
