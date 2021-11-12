@@ -3,7 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:theme/src/colors.dart';
 import 'package:theme/src/typography/typography.dart';
 
+/// {@template AppThemeData}
+/// Defines the configuration of the overall visual [Theme] for a [MaterialApp]
+/// or a widget subtree within the app.
+/// {@endtemplate}
 class AppThemeData {
+  /// App dark theme
   static ThemeData dark = ThemeData(
     colorScheme: ColorScheme.fromSwatch(
       brightness: Brightness.dark,

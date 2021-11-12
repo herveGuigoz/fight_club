@@ -1,6 +1,8 @@
 import 'package:flutter/rendering.dart';
 
+/// {@template AppFontWeight}
 /// Namespace for Default Font Weights
+/// {@endtemplate}
 abstract class AppFontWeight {
   /// FontWeight value of `w700`
   static const FontWeight bold = FontWeight.w700;

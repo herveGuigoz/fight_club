@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// {@template outlined_list_tile}
+/// {@template OutlinedListTile}
 /// A single row for rendering attribute's name and value.
 /// {@endtemplate}
 class OutlinedListTile extends StatelessWidget {
-  /// {@macro outlined_list_tile}
+  /// {@macro OutlinedListTile}
   const OutlinedListTile({
     Key? key,
     required this.label,

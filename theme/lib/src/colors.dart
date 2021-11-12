@@ -1,5 +1,10 @@
+// ignore_for_file: public_member_api_docs
+
 import 'dart:ui';
 
+/// {@template AppColors}
+/// Colors palette
+/// {@endtemplate}
 abstract class AppColors {
   static const background = Color(0xff303030);
 

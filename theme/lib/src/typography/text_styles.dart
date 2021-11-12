@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:theme/src/typography/font_weights.dart';
 
+/// {@template AppTextStyle}
 /// Text Style Definitions
 ///
 /// ([https://material.io/design/typography](https://material.io/design/typography)).
@@ -23,6 +24,7 @@ import 'package:theme/src/typography/font_weights.dart';
 /// caption      12.0  regular  0.4
 /// overline     10.0  regular  1.5
 /// ```
+/// {@endtemplate}
 class AppTextStyle {
   static const _kDefaultTextStyle = TextStyle(
     package: 'theme',
