@@ -16,9 +16,13 @@ class CharactersController implements FightObserver {
   @visibleForTesting
   List<Character> get state => _state;
 
-  /// Create random [Character] in isolate.
-  Future<List<Character>> getRandomCharacters({int count = 1000}) async {
-    if (_state.isEmpty) {
+  /// Create [count] random [Character] in isolate.
+  /// If [refresh] is true old characters will be replaced.
+  Future<List<Character>> getRandomCharacters({
+    int count = 1000,
+    bool refresh = false,
+  }) async {
+    if (_state.isEmpty || refresh) {
       _state = await compute(Faker.characters, count);
     }
 
@@ -29,11 +33,19 @@ class CharactersController implements FightObserver {
     /// List of random characters.
     final characters = await getRandomCharacters();
 
-    /// The character has to be free (it must not have fight in the past hour)
-    // todo throw exception if empty
+    /// The character has to be free, it must not have loose a fight in the past
+    /// hour.
     final availableCharacters = characters
         .where((character) => !character.didLooseFightInPastHour())
         .toList();
+
+    /// If we cant find characters who did not loose, refresh the state with new
+    /// characters.
+    if (availableCharacters.isEmpty) {
+      await getRandomCharacters(refresh: true);
+      return findOpponentFor(character);
+    }
+
     if (availableCharacters.isUnique) return availableCharacters.first;
 
     // Take the closest opponent based on rank value

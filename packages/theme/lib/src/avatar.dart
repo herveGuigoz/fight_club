@@ -43,7 +43,7 @@ abstract class Avatar {
   /// avatar's svg
   final PathIconData icon;
 
-  /// Iterable of all available icons
+  /// Iterable of all available avatar
   static final all = <Avatar>[
     Avatar.anonymous(),
     Avatar.bender(),

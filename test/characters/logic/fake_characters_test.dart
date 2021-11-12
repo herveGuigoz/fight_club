@@ -29,6 +29,43 @@ void main() {
         expect(theOne, equals(characterB));
       });
 
+      test('if no one is free, should generate new characters', () async {
+        final now = DateTime.now();
+        final fightA = Fight(
+          id: 'fightA',
+          date: now,
+          rounds: [
+            Round(
+              id: 1,
+              attacker: Character(id: 'characterA'),
+              defender: Character(id: 'characterB'),
+            ),
+          ],
+        );
+        final fightB = Fight(
+          id: 'fightB',
+          date: now,
+          rounds: [
+            Round(
+              id: 1,
+              attacker: Character(id: 'characterB'),
+              defender: Character(id: 'characterA'),
+            ),
+          ],
+        );
+
+        Character characterA = Character(id: 'characterA', fights: [fightB]);
+        Character characterB = Character(id: 'characterB', fights: [fightA]);
+
+        expect(characterA.didLooseFightInPastHour(), isTrue);
+        expect(characterB.didLooseFightInPastHour(), isTrue);
+
+        final controller = CharactersController([characterA, characterB]);
+        final theOne = await controller.findOpponentFor(Character());
+        expect(theOne.id == characterA.id, isFalse);
+        expect(theOne.id == characterB.id, isFalse);
+      });
+
       test('Take the closest opponent based on rank value', () async {
         final characterA = Character(level: 1);
         final characterB = Character(level: 25);

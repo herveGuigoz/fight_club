@@ -10,42 +10,35 @@ final charactersProvider = Provider<CharactersController>(
 
 /// The currently selected character for the fight.
 /// default value to the first character available.
-final selectedCharacterProvider = StateProvider<Character?>(
-  (ref) {
-    final characters = ref.watch(availableCharactersProvider);
-    return characters.isNotEmpty ? characters.first : null;
-  },
-  name: 'selectedCharacterProvider',
-);
+final selectedCharacterProvider = StateProvider<Character?>((ref) {
+  final characters = ref.watch(availableCharactersProvider);
+  return characters.isNotEmpty ? characters.first : null;
+});
 
 final fightService = Provider(
   (ref) => FightService(
     observers: [
-      ref.read(authProvider.notifier),
-      ref.read(charactersProvider),
+      ref.watch(authProvider.notifier),
+      ref.watch(charactersProvider),
     ],
   ),
-  name: 'fightService',
 );
 
-final fightResultProvider = FutureProvider.autoDispose(
-  (ref) async {
-    final character = ref.read(selectedCharacterProvider);
-    if (character == null) throw SelectedCharacterNotfound();
+final fightResultProvider = FutureProvider.autoDispose((ref) async {
+  final character = ref.read(selectedCharacterProvider);
+  if (character == null) throw SelectedCharacterNotfound();
 
-    final other = await ref.read(charactersProvider).findOpponentFor(character);
+  final other = await ref.read(charactersProvider).findOpponentFor(character);
 
-    final fight = await ref.read(fightService).launchFight(character, other);
+  final fight = await ref.read(fightService).launchFight(character, other);
 
-    return FightResult(
-      character: character,
-      opponent: other,
-      didWin: fight.didWin(character),
-      fight: fight,
-    );
-  },
-  name: 'fightResultProvider',
-);
+  return FightResult(
+    character: character,
+    opponent: other,
+    didWin: fight.didWin(character),
+    fight: fight,
+  );
+});
 
 class SelectedCharacterNotfound implements Exception {
   @override
