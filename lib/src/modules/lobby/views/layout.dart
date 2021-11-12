@@ -1,5 +1,6 @@
 import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:flutter/material.dart';
+import 'package:theme/theme.dart';
 
 class FightResumeLayout extends StatelessWidget {
   const FightResumeLayout({
@@ -48,9 +49,9 @@ class RoundListTile extends StatelessWidget {
 
     return ListTile(
       tileColor: round.damages > 0
-          ? round.id.isOdd
-              ? Colors.green[300]
-              : Colors.red[300]
+          ? didAttack
+              ? AppColors.green1
+              : AppColors.red7
           : null,
       dense: true,
       leading: Text(
