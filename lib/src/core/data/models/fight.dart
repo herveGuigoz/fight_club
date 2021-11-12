@@ -13,14 +13,6 @@ class Fight extends Model {
   final DateTime date;
   final List<Round> rounds;
 
-  // List<Character> get characters {
-  //   return rounds.fold([], (array, round) {
-  //     if (!array.contains(round.attacker)) array.add(round.attacker);
-
-  //     return array;
-  //   });
-  // }
-
   bool didWin(Character character) {
     if (rounds.isEmpty) return false;
     return rounds.last.attacker.id == character.id;

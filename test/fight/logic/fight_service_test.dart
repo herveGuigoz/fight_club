@@ -72,26 +72,24 @@ void main() {
       });
 
       group('Attack succeed', () {
-        test(
-          'the difference is substracted from the opponents Health Point',
-          () {
-            const attack = 20;
-            const defense = 10;
-            const health = 50;
+        test('the difference is substracted from the opponents Health Point',
+            () {
+          const attack = 20;
+          const defense = 10;
+          const health = 50;
 
-            final characterA = Character(attack: attack);
-            final characterB = Character(defense: defense, health: health);
+          final characterA = Character(attack: attack);
+          final characterB = Character(defense: defense, health: health);
 
-            FightService.dice = dice;
-            when(() => dice.roll(any())).thenReturn(attack);
+          FightService.dice = dice;
+          when(() => dice.roll(any())).thenReturn(attack);
 
-            final round = FightService.processRound(1, characterA, characterB);
-            expect(
-              round.defender<Health>().points,
-              equals(health - (attack - defense)),
-            );
-          },
-        );
+          final round = FightService.processRound(1, characterA, characterB);
+          expect(
+            round.defender<Health>().points,
+            equals(health - (attack - defense)),
+          );
+        });
 
         test(
           'If the difference equals Magiks Skill Point amount, this value is '
@@ -133,25 +131,25 @@ void main() {
 
     group('processFight', () {
       final A = Character(attack: 10, defense: 10, health: 20);
-      final B = Character(attack: 10, defense: 5, health: 10);
+      final B = Character(attack: 20, defense: 5, health: 20);
 
       test('launchFight return Fight', () async {
         final result = await FightService().launchFight(A, B);
         expect(result, isA<Fight>());
+        expect(result.rounds.length > 1, isTrue);
       });
-      test(
-        'until a characters Health Point reaches 0, the fight continues',
-        () {
-          final rounds = FightService.processFight(IsolateEntry(A, B));
-          final roundsWithHealthPointsSmallerThanOne = <Round>[];
-          for (final round in rounds) {
-            if (round.defender<Health>().points < 1) {
-              roundsWithHealthPointsSmallerThanOne.add(round);
-            }
+
+      test('until a characters Health Point reaches 0, the fight continues',
+          () {
+        final rounds = FightService.processFight(IsolateEntry(A, B));
+        final roundsWithHealthPointsSmallerThanOne = <Round>[];
+        for (final round in rounds) {
+          if (round.defender<Health>().points < 1) {
+            roundsWithHealthPointsSmallerThanOne.add(round);
           }
-          expect(roundsWithHealthPointsSmallerThanOne.length, equals(1));
-        },
-      );
+        }
+        expect(roundsWithHealthPointsSmallerThanOne.length, equals(1));
+      });
 
       test('throw exception if any characters can win', () async {
         expect(
