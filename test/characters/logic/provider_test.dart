@@ -19,9 +19,11 @@ void main() {
     });
 
     test('selectedCharacter return null if any characters is available', () {
-      final container = createContainer(overrides: [
-        availableCharactersProvider.overrideWithValue([]),
-      ]);
+      final container = createContainer(
+        overrides: [
+          availableCharactersProvider.overrideWithValue([]),
+        ],
+      );
 
       final selectedCharacter = container.read(selectedCharacterProvider);
 
@@ -29,9 +31,11 @@ void main() {
     });
 
     test('selectedCharacterProvider return first character by default', () {
-      final container = createContainer(overrides: [
-        availableCharactersProvider.overrideWithValue(characters),
-      ]);
+      final container = createContainer(
+        overrides: [
+          availableCharactersProvider.overrideWithValue(characters),
+        ],
+      );
 
       final selectedCharacter = container.read(selectedCharacterProvider);
 
@@ -39,15 +43,16 @@ void main() {
     });
 
     test('can update selectedCharacterProvider', () {
-      final container = createContainer(overrides: [
-        availableCharactersProvider.overrideWithValue(characters),
-      ]);
+      final container = createContainer(
+        overrides: [
+          availableCharactersProvider.overrideWithValue(characters),
+        ],
+      );
 
       var selectedCharacter = container.read(selectedCharacterProvider);
       expect(selectedCharacter, equals(characterA));
 
-      final controller = container.read(selectedCharacterProvider.state);
-      controller.state = characterB;
+      container.read(selectedCharacterProvider.state).state = characterB;
       selectedCharacter = container.read(selectedCharacterProvider);
       expect(selectedCharacter, equals(characterB));
     });
@@ -63,10 +68,12 @@ void main() {
       final characterA = Character(id: 'A', attack: 10, defense: 10);
       final characterB = Character(id: 'B', attack: 1, defense: 1);
       final charactersController = CharactersController([characterB]);
-      final container = createContainer(overrides: [
-        availableCharactersProvider.overrideWithValue([characterA]),
-        charactersProvider.overrideWithValue(charactersController),
-      ]);
+      final container = createContainer(
+        overrides: [
+          availableCharactersProvider.overrideWithValue([characterA]),
+          charactersProvider.overrideWithValue(charactersController),
+        ],
+      );
 
       late final FightResult result;
 
@@ -74,9 +81,10 @@ void main() {
         if (state is AsyncData<FightResult>) result = state.value;
       });
 
+      // ignore: cascade_invocations
       container.read(fightResultProvider);
 
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future<void>.delayed(const Duration(milliseconds: 500));
 
       expect(result.didWin, isTrue);
       expect(result.character, equals(characterA));
@@ -88,10 +96,12 @@ void main() {
       final characterA = Character(id: 'A', attack: 1, defense: 1);
       final characterB = Character(id: 'B', attack: 10, defense: 10);
       final charactersController = CharactersController([characterB]);
-      final container = createContainer(overrides: [
-        availableCharactersProvider.overrideWithValue([characterA]),
-        charactersProvider.overrideWithValue(charactersController),
-      ]);
+      final container = createContainer(
+        overrides: [
+          availableCharactersProvider.overrideWithValue([characterA]),
+          charactersProvider.overrideWithValue(charactersController),
+        ],
+      );
 
       late final FightResult result;
 
@@ -99,9 +109,10 @@ void main() {
         if (state is AsyncData<FightResult>) result = state.value;
       });
 
+      // ignore: cascade_invocations
       container.read(fightResultProvider);
 
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future<void>.delayed(const Duration(milliseconds: 500));
 
       expect(result.didWin, isFalse);
       expect(result.character, equals(characterA));
@@ -109,9 +120,11 @@ void main() {
     });
 
     test('fightResultProvider throw SelectedCharacterNotfound', () async {
-      final container = createContainer(overrides: [
-        availableCharactersProvider.overrideWithValue([]),
-      ]);
+      final container = createContainer(
+        overrides: [
+          availableCharactersProvider.overrideWithValue([]),
+        ],
+      );
 
       expect(container.read(selectedCharacterProvider), isNull);
 

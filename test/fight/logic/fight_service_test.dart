@@ -30,7 +30,7 @@ void main() {
       final dice = MockDice();
 
       test('if attacker point is 0, return untouched characters', () {
-        final characterA = Character(attack: 0);
+        final characterA = Character();
         final characterB = Character(attack: 10);
 
         final round = FightService.processRound(1, characterA, characterB);
@@ -39,7 +39,7 @@ void main() {
       });
 
       test(
-        'Damages value is the difference between Attack and Defenses Skills'
+        'Damages value is the difference between Attack and Defenses Skills '
         'Points amount',
         () {
           const attack = 20;

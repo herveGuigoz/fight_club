@@ -7,9 +7,9 @@ import 'package:fight_club/src/modules/authentication/view/onboarding.dart';
 import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:fight_club/src/modules/lobby/lobby.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../helpers/helpers.dart';
 import '../../helpers/pump_app.dart';
@@ -35,9 +35,9 @@ void main() {
     testWidgets('should save character', (tester) async {
       final storage = setUpStorage();
       await tester.pumpApp(const OnboardingView());
-      verifyNever(() => storage.write(any(), any()));
+      verifyNever(() => storage.write(any(), any<dynamic>()));
       await tester.tap(find.byKey(const Key('save_character')));
-      verify(() => storage.write(any(), any())).called(1);
+      verify(() => storage.write(any(), any<dynamic>())).called(1);
     });
   });
 
@@ -116,14 +116,15 @@ void main() {
 
       late final WidgetRef widgetRef;
 
-      await tester.pumpApp(Consumer(
-        builder: (context, ref, child) {
-          widgetRef = ref;
-          return const Home();
-        },
-      ), overrides: [
-        selectedCharacterProvider.overrideWithProvider(controller)
-      ]);
+      await tester.pumpApp(
+        Consumer(
+          builder: (context, ref, child) {
+            widgetRef = ref;
+            return const Home();
+          },
+        ),
+        overrides: [selectedCharacterProvider.overrideWithProvider(controller)],
+      );
 
       expect(widgetRef.read(selectedCharacterProvider), equals(characterA));
 
@@ -146,7 +147,7 @@ void main() {
     });
 
     testWidgets('Fight button should not be visible', (tester) async {
-      setUpStorage(onRead: codec.toMap(const Session(characters: [])));
+      setUpStorage(onRead: codec.toMap(const Session()));
       await tester.pumpApp(const Home());
       await tester.tap(find.text('Lobby'));
       await tester.pumpAndSettle();
@@ -177,9 +178,12 @@ void main() {
       setUpStorage(
         onRead: codec.toMap(Session(characters: [characterA])),
       );
-      await tester.pumpApp(const Home(), overrides: [
-        fightResultProvider.overrideWithValue(AsyncData(fightResult)),
-      ]);
+      await tester.pumpApp(
+        const Home(),
+        overrides: [
+          fightResultProvider.overrideWithValue(AsyncData(fightResult)),
+        ],
+      );
       await tester.tap(find.text('Lobby'));
       await tester.pumpAndSettle();
       await tester.tap(find.byType(TextButton));

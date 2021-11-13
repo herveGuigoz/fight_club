@@ -1,5 +1,5 @@
-import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:fight_club/src/core/data/faker.dart';
+import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

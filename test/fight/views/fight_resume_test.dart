@@ -10,10 +10,13 @@ import '../../helpers/pump_app.dart';
 void main() {
   final characterA = Character(id: 'A');
   final characterB = Character(id: 'B');
-  final fight = Fight(date: DateTime.now(), rounds: [
-    Round(id: 1, attacker: characterA, defender: characterB, damages: 5),
-    Round(id: 2, attacker: characterB, defender: characterA, damages: 10),
-  ]);
+  final fight = Fight(
+    date: DateTime.now(),
+    rounds: [
+      Round(id: 1, attacker: characterA, defender: characterB, damages: 5),
+      Round(id: 2, attacker: characterB, defender: characterA, damages: 10),
+    ],
+  );
   final result = FightResult(
     character: characterA,
     opponent: characterB,
@@ -25,14 +28,16 @@ void main() {
     testWidgets('should push to FightResumeView view', (tester) async {
       await tester.pumpApp(
         Material(
-          child: Builder(builder: (context) {
-            return TextButton(
-              onPressed: () => Navigator.of(context).push(
-                FightResumeView.route(characterA, fight),
-              ),
-              child: const Text('ClickMe'),
-            );
-          }),
+          child: Builder(
+            builder: (context) {
+              return TextButton(
+                onPressed: () => Navigator.of(context).push(
+                  FightResumeView.route(characterA, fight),
+                ),
+                child: const Text('ClickMe'),
+              );
+            },
+          ),
         ),
       );
 
@@ -61,14 +66,16 @@ void main() {
     testWidgets('should push to FightResultView view', (tester) async {
       await tester.pumpApp(
         Material(
-          child: Builder(builder: (context) {
-            return TextButton(
-              onPressed: () => Navigator.of(context).push(
-                FightResultView.route(),
-              ),
-              child: const Text('ClickMe'),
-            );
-          }),
+          child: Builder(
+            builder: (context) {
+              return TextButton(
+                onPressed: () => Navigator.of(context).push(
+                  FightResultView.route(),
+                ),
+                child: const Text('ClickMe'),
+              );
+            },
+          ),
         ),
         overrides: [
           fightResultProvider.overrideWithValue(AsyncData(result)),

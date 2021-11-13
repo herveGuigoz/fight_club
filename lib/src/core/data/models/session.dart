@@ -1,8 +1,8 @@
+import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:fight_club/src/core/data/models/models.dart';
-
 /// Auth informations
+@immutable
 class Session {
   const Session({this.characters = const []});
 

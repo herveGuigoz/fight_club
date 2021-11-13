@@ -29,7 +29,7 @@ class Faker {
     final losses = maxFightsCount - wins;
 
     // compute overall number of skills
-    int skillsCount = kDefaultSkillsPoints + wins;
+    final skillsCount = kDefaultSkillsPoints + wins;
 
     // assign randomly one point per skills count
     final attributes = <String, int>{
@@ -61,11 +61,10 @@ class Faker {
       ]),
       level: math.max(1, wins - losses),
       skills: 0,
-      health: attributes['health'] as int,
-      attack: attributes['attack'] as int,
-      defense: attributes['defense'] as int,
-      magik: attributes['magik'] as int,
-      fights: [],
+      health: attributes['health']!,
+      attack: attributes['attack']!,
+      defense: attributes['defense']!,
+      magik: attributes['magik']!,
     );
   }
 }

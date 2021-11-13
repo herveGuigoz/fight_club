@@ -172,10 +172,12 @@ void main() {
         expect(find.byType(AttributesLayout), findsOneWidget);
         expect(find.text('${character<Health>().points + 1}'), findsOneWidget);
         verify(
-          () => authController.updateCharacter(character.copyWith(
-            skills: character.skills - 1,
-            health: character<Health>().points + 1,
-          )),
+          () => authController.updateCharacter(
+            character.copyWith(
+              skills: character.skills - 1,
+              health: character<Health>().points + 1,
+            ),
+          ),
         ).called(1);
       });
     });

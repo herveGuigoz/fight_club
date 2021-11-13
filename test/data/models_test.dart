@@ -8,7 +8,7 @@ import 'package:mocktail/mocktail.dart';
 class MockFight extends Mock implements Fight {}
 
 class WrongAttribute extends Attribute {
-  WrongAttribute(int points) : super(points);
+  const WrongAttribute(int points) : super(points);
 
   @override
   Attribute copyWith({int? points}) => this;
@@ -135,43 +135,44 @@ void main() {
 
     group('upgrade', () {
       test('add attribute and remove skills', () {
-        final A = Character(skills: 1, health: 10).upgrade<Health>();
-        final B = Character(skills: 1, attack: 3).upgrade<Attack>();
-        final C = Character(skills: 2, defense: 9).upgrade<Defense>();
-        final D = Character(skills: 7, magik: 32).upgrade<Magik>();
+        final characterA = Character(skills: 1, health: 1).upgrade<Health>();
+        final characterB = Character(skills: 1, attack: 3).upgrade<Attack>();
+        final characterC = Character(skills: 2, defense: 9).upgrade<Defense>();
+        final characterD = Character(skills: 7, magik: 32).upgrade<Magik>();
 
-        expect(A<Health>().points, equals(11));
-        expect(A.skills, equals(0));
+        expect(characterA<Health>().points, equals(2));
+        expect(characterA.skills, equals(0));
 
-        expect(B<Attack>().points, equals(4));
-        expect(B.skills, equals(0));
+        expect(characterB<Attack>().points, equals(4));
+        expect(characterB.skills, equals(0));
 
-        expect(C<Defense>().points, equals(10));
-        expect(C.skills, equals(0));
+        expect(characterC<Defense>().points, equals(10));
+        expect(characterC.skills, equals(0));
 
-        expect(D<Magik>().points, equals(33));
-        expect(D.skills, equals(0));
+        expect(characterD<Magik>().points, equals(33));
+        expect(characterD.skills, equals(0));
       });
     });
 
     group('downgrade', () {
       test('remove attribute and add skills', () {
-        final A = Character(skills: 0, health: 11).downgrade<Health>();
-        final B = Character(skills: 0, attack: 4).downgrade<Attack>();
-        final C = Character(skills: 0, defense: 10).downgrade<Defense>();
-        final D = Character(skills: 0, magik: 33).downgrade<Magik>();
+        final characterA = Character(skills: 0, health: 11).downgrade<Health>();
+        final characterB = Character(skills: 0, attack: 4).downgrade<Attack>();
+        final characterC =
+            Character(skills: 0, defense: 10).downgrade<Defense>();
+        final characterD = Character(skills: 0, magik: 33).downgrade<Magik>();
 
-        expect(A<Health>().points, equals(10));
-        expect(A.skills, equals(1));
+        expect(characterA<Health>().points, equals(10));
+        expect(characterA.skills, equals(1));
 
-        expect(B<Attack>().points, equals(3));
-        expect(B.skills, equals(1));
+        expect(characterB<Attack>().points, equals(3));
+        expect(characterB.skills, equals(1));
 
-        expect(C<Defense>().points, equals(9));
-        expect(C.skills, equals(2));
+        expect(characterC<Defense>().points, equals(9));
+        expect(characterC.skills, equals(2));
 
-        expect(D<Magik>().points, equals(32));
-        expect(D.skills, equals(7));
+        expect(characterD<Magik>().points, equals(32));
+        expect(characterD.skills, equals(7));
       });
     });
 
@@ -401,62 +402,62 @@ void main() {
     final round = Round(id: 1, attacker: characterA, defender: characterB);
 
     test('equality', () {
-      final A = Fight(date: now, rounds: []);
-      final B = Fight(date: now, rounds: [round]);
-      final C = Fight(date: now, rounds: []);
+      final fightA = Fight(date: now);
+      final fightB = Fight(date: now, rounds: [round]);
+      final fightC = Fight(date: now);
 
-      expect(A != B, isTrue);
-      expect(A.hashCode != B.hashCode, isTrue);
-      expect(A != C, isFalse);
+      expect(fightA != fightB, isTrue);
+      expect(fightA.hashCode != fightB.hashCode, isTrue);
+      expect(fightA != fightC, isFalse);
     });
 
     test('copyWith', () {
-      final A = Fight(date: now, rounds: []);
+      final fightA = Fight(date: now);
       final yesterday = now.subtract(const Duration(days: 1));
 
-      expect(A.copyWith().date, equals(A.date));
-      expect(A.copyWith().rounds, equals(A.rounds));
-      expect(A.copyWith(date: yesterday).date, equals(yesterday));
-      expect(A.copyWith(rounds: [round]).rounds, equals([round]));
+      expect(fightA.copyWith().date, equals(fightA.date));
+      expect(fightA.copyWith().rounds, equals(fightA.rounds));
+      expect(fightA.copyWith(date: yesterday).date, equals(yesterday));
+      expect(fightA.copyWith(rounds: [round]).rounds, equals([round]));
     });
 
     test('toString', () {
-      final A = Fight(date: now, rounds: []);
+      final fightA = Fight(date: now);
 
-      expect(A.toString(), 'Fight(date: $now)');
+      expect(fightA.toString(), 'Fight(date: $now)');
     });
   });
 
   group('FightResult', () {
     final characterA = Character(id: 'A');
     final characterB = Character(id: 'B');
-    final fight = Fight(date: DateTime.now(), rounds: []);
+    final fight = Fight(date: DateTime.now());
 
     test('equality', () {
-      final A = FightResult(
+      final fightA = FightResult(
         character: characterA,
         opponent: characterB,
         didWin: true,
         fight: fight,
       );
 
-      final B = FightResult(
+      final fightB = FightResult(
         character: characterB,
         opponent: characterA,
         didWin: false,
         fight: fight,
       );
 
-      final C = FightResult(
+      final fightC = FightResult(
         character: characterA,
         opponent: characterB,
         didWin: true,
         fight: fight,
       );
 
-      expect(A != B, isTrue);
-      expect(A.hashCode != B.hashCode, isTrue);
-      expect(A != C, isFalse);
+      expect(fightA != fightB, isTrue);
+      expect(fightA.hashCode != fightB.hashCode, isTrue);
+      expect(fightA != fightC, isFalse);
     });
   });
 
@@ -479,7 +480,6 @@ void main() {
       test('when damages equals 0, succeed return false', () {
         final round = Round(
           id: 1,
-          damages: 0,
           attacker: attacker,
           defender: defender,
         );

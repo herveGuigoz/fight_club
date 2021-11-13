@@ -1,8 +1,8 @@
+import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:fight_club/src/core/data/models/models.dart';
-
+@immutable
 class Fight extends Model {
   Fight({
     String? id,
@@ -38,8 +38,9 @@ class Fight extends Model {
   int get hashCode => date.hashCode ^ rounds.hashCode;
 }
 
+@immutable
 class FightResult {
-  FightResult({
+  const FightResult({
     required this.character,
     required this.opponent,
     required this.didWin,

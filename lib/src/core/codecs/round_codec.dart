@@ -9,17 +9,17 @@ class RoundCodec extends JsonCodec<Round> {
   @override
   Round fromMap(Map<String, dynamic> json) {
     return Round(
-      id: json['id'],
-      diceResult: json['diceResult'],
-      damages: json['damages'],
-      attacker: _character.fromMap(json['attacker']),
-      defender: _character.fromMap(json['defender']),
+      id: json['id'] as int,
+      diceResult: json['diceResult'] as int,
+      damages: json['damages'] as int,
+      attacker: _character.fromMap(json['attacker'] as Map<String, dynamic>),
+      defender: _character.fromMap(json['defender'] as Map<String, dynamic>),
     );
   }
 
   @override
   Map<String, dynamic> toMap(Round value) {
-    return {
+    return <String, dynamic>{
       'id': value.id,
       'diceResult': value.diceResult,
       'damages': value.damages,

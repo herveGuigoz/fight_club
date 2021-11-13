@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_asserts_with_message
+
 import 'dart:async';
 
 import 'package:fight_club/src/core/storage/hydrated_storage.dart';
@@ -123,6 +125,7 @@ mixin HydratedMixin<State> on StateNotifier<State> {
       }
       _removeSeen(value);
       return _Traversed.complex(traversedCustomJson);
+      // ignore: avoid_catching_errors
     } on HydratedCyclicError catch (e) {
       throw HydratedUnsupportedError(value, cause: e);
     }
@@ -180,6 +183,7 @@ mixin HydratedMixin<State> on StateNotifier<State> {
         : _traverseComplexJson(object);
   }
 
+  // ignore: avoid_dynamic_calls
   dynamic _toEncodable(dynamic object) => object.toJson();
 
   final List _seen = <dynamic>[];

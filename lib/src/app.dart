@@ -1,11 +1,10 @@
 import 'package:fight_club/src/modules/authentication/authentication.dart';
+import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:fight_club/src/modules/lobby/lobby.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_icon/path_icon.dart';
 import 'package:theme/theme.dart';
-
-import 'modules/characters/characters.dart';
 
 class FightClub extends ConsumerWidget {
   const FightClub({Key? key}) : super(key: key);
@@ -90,10 +89,12 @@ class _HomeState extends ConsumerState<Home> {
           }
         },
         items: destinations
-            .map((destination) => BottomNavigationBarItem(
-                  icon: destination.icon,
-                  label: destination.label,
-                ))
+            .map(
+              (destination) => BottomNavigationBarItem(
+                icon: destination.icon,
+                label: destination.label,
+              ),
+            )
             .toList(),
       ),
     );

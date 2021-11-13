@@ -1,9 +1,10 @@
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:fight_club/src/core/codecs/json_codec.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:meta/meta.dart';
 
+@immutable
 class Human {
-  Human(this.name);
+  const Human(this.name);
   final String name;
 
   @override
@@ -19,16 +20,20 @@ class Human {
 
 class HumanCodec extends JsonCodec<Human> {
   @override
-  Human fromMap(Map<String, dynamic> json) => Human(json['name'] as String);
+  Human fromMap(Map<String, dynamic> json) {
+    return Human(json['name'] as String);
+  }
 
   @override
-  Map<String, dynamic> toMap(Human value) => {'name': value.name};
+  Map<String, dynamic> toMap(Human value) {
+    return <String, String>{'name': value.name};
+  }
 }
 
 void main() {
   group('JsonCodec', () {
     final codec = HumanCodec();
-    final value = Human('jhondoe');
+    const value = Human('jhondoe');
     const json = '{"name":"jhondoe"}';
 
     test('encode to string', () {
@@ -40,13 +45,13 @@ void main() {
     });
 
     test('encodeList', () {
-      const json = r'[{"name":"A"},{"name":"B"}]';
-      expect(codec.encodeList([Human('A'), Human('B')]), equals(json));
+      const json = '[{"name":"A"},{"name":"B"}]';
+      expect(codec.encodeList(const [Human('A'), Human('B')]), equals(json));
     });
 
     test('decodeList', () {
-      const json = r'[{"name":"A"},{"name":"B"}]';
-      expect(codec.decodeList(json), equals([Human('A'), Human('B')]));
+      const json = '[{"name":"A"},{"name":"B"}]';
+      expect(codec.decodeList(json), equals(const [Human('A'), Human('B')]));
     });
   });
 }

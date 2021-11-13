@@ -20,7 +20,7 @@ void main() {
       final container = createContainer();
       final expected = container.read(authProvider);
 
-      verify(() => storage.read(any())).called(1);
+      verify<void>(() => storage.read(any())).called(1);
       expect(session, equals(expected));
     });
 
@@ -38,7 +38,7 @@ void main() {
       final storage = setUpStorage();
       final container = createContainer();
       container.read(authProvider.notifier).addNewCharacter(Character());
-      verify(() => storage.write(any(), any())).called(1);
+      verify(() => storage.write(any(), any<dynamic>())).called(1);
     });
 
     test('update character that match id', () {
@@ -51,15 +51,13 @@ void main() {
       setUpStorage(onRead: codec.toMap(session));
 
       final container = createContainer();
-      final controller = container.read(authProvider.notifier);
-
-      controller.updateCharacter(characterC);
+      container.read(authProvider.notifier).updateCharacter(characterC);
       final stateA = container.read(authProvider);
       expect(stateA.characters.length, equals(2));
       expect(stateA.characters[0], equals(characterA));
       expect(stateA.characters[1], equals(characterB));
 
-      controller.updateCharacter(characterD);
+      container.read(authProvider.notifier).updateCharacter(characterD);
       final stateB = container.read(authProvider);
       expect(stateB.characters.length, equals(2));
       expect(stateB.characters[0], equals(characterA));
@@ -75,15 +73,14 @@ void main() {
       setUpStorage(onRead: codec.toMap(session));
 
       final container = createContainer();
-      final controller = container.read(authProvider.notifier);
 
-      controller.removeCharacter(characterC);
+      container.read(authProvider.notifier).removeCharacter(characterC);
       final stateA = container.read(authProvider);
       expect(stateA.characters.length, equals(2));
       expect(stateA.characters[0], equals(characterA));
       expect(stateA.characters[1], equals(characterB));
 
-      controller.removeCharacter(characterA);
+      container.read(authProvider.notifier).removeCharacter(characterA);
       final stateB = container.read(authProvider);
       expect(stateB.characters.length, equals(1));
       expect(stateB.characters[0], equals(characterB));
@@ -91,17 +88,16 @@ void main() {
 
     test('when character won a fight, level and skills are upgrated', () {
       final fight = MockFight();
-      final characterA = Character(id: 'A', level: 1, skills: 0);
-      final characterB = Character(id: 'A', level: 1, skills: 0, health: 2);
+      final characterA = Character(id: 'A', skills: 0);
+      final characterB = Character(id: 'A', skills: 0, health: 2);
       when(() => fight.didWin(characterB)).thenReturn(true);
 
       final session = Session(characters: [characterA, characterB]);
       setUpStorage(onRead: codec.toMap(session));
 
       final container = createContainer();
-      final controller = container.read(authProvider.notifier);
 
-      controller.didFight(characterB, fight);
+      container.read(authProvider.notifier).didFight(characterB, fight);
       final state = container.read(authProvider).characters;
 
       expect(state.first.level, equals(2));
@@ -111,17 +107,16 @@ void main() {
 
     test('when character loss a fight, attribute did not change', () {
       final fight = MockFight();
-      final characterA = Character(id: 'A', level: 1, skills: 0);
-      final characterB = Character(id: 'A', level: 1, skills: 0, health: 2);
+      final characterA = Character(id: 'A', skills: 0);
+      final characterB = Character(id: 'A', skills: 0, health: 2);
       when(() => fight.didWin(characterB)).thenReturn(false);
 
       final session = Session(characters: [characterA, characterB]);
       setUpStorage(onRead: codec.toMap(session));
 
       final container = createContainer();
-      final controller = container.read(authProvider.notifier);
 
-      controller.didFight(characterB, fight);
+      container.read(authProvider.notifier).didFight(characterB, fight);
       final state = container.read(authProvider).characters;
 
       expect(state.first.level, equals(1));

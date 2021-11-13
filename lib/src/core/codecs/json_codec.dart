@@ -20,9 +20,9 @@ abstract class JsonCodec<T> {
   }
 
   List<T> decodeList(String value) {
-    return jsonDecode(value)
+    return (jsonDecode(value) as List<dynamic>)
         .map((dynamic x) => fromMap(x as Map<String, dynamic>))
         .toList()
-        .cast<T>() as List<T>;
+        .cast<T>();
   }
 }

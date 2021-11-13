@@ -17,7 +17,7 @@ class LobbyView extends ConsumerWidget {
     final selectedCharacter = ref.watch(selectedCharacterProvider);
 
     return Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(24),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,8 +29,7 @@ class LobbyView extends ConsumerWidget {
               isExpanded: true,
               value: selectedCharacter,
               onChanged: (character) {
-                final controller = ref.read(selectedCharacterProvider.state);
-                controller.state = character!;
+                ref.read(selectedCharacterProvider.state).state = character;
               },
               items: [
                 for (final character in characters)
@@ -49,14 +48,17 @@ class LobbyView extends ConsumerWidget {
           ),
           const Gap(16),
           if (characters.isNotEmpty)
-            ButtonBar(children: [
-              TextButton(
-                onPressed: selectedCharacter != null
-                    ? () => Navigator.of(context).push(FightResultView.route())
-                    : null,
-                child: const Text('Fight'),
-              ),
-            ]),
+            ButtonBar(
+              children: [
+                TextButton(
+                  onPressed: selectedCharacter != null
+                      ? () =>
+                          Navigator.of(context).push(FightResultView.route())
+                      : null,
+                  child: const Text('Fight'),
+                ),
+              ],
+            ),
         ],
       ),
     );

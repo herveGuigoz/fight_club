@@ -11,8 +11,10 @@ class CharacterReadView extends ConsumerWidget {
 
   final Character character;
 
-  static Route<T> route<T>(Character character) {
-    return MaterialPageRoute<T>(builder: (_) => CharacterReadView(character));
+  static Route<void> route(Character character) {
+    return MaterialPageRoute<void>(
+      builder: (_) => CharacterReadView(character),
+    );
   }
 
   @override
@@ -27,8 +29,7 @@ class CharacterReadView extends ConsumerWidget {
               iconSize: 16,
               splashRadius: 24,
               onPressed: () async {
-                final decision = await DeleteCharacterDialog.show(context);
-                if (decision ?? false) {
+                if (await DeleteCharacterDialog.show(context) ?? false) {
                   Navigator.of(context).pop();
                   ref.read(authProvider.notifier).removeCharacter(character);
                 }
@@ -87,7 +88,7 @@ class _AttributesLayoutState extends ConsumerState<AttributesLayout> {
     return ListTileTheme(
       dense: true,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
             OutlinedListTile(

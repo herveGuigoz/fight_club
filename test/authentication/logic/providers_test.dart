@@ -52,7 +52,7 @@ void main() {
       test('return only characters that did not loosed in last 24 hours', () {
         final fight = MockFight();
         final characterA = Character(fights: [fight]);
-        final characterB = Character(fights: []);
+        final characterB = Character();
 
         when(() => fight.didWin(characterA)).thenReturn(false);
         when(() => fight.date).thenReturn(DateTime.now());
