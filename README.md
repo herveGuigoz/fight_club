@@ -54,8 +54,10 @@ open coverage/index.html
 
 ## Continuous Integration
 
-This project run Github Action on push and pull request in order to:
+This project run github actions in order to:
 
-- Analyze code with lint rules
+- Validate code against lint rules
 - Run the tests
 - Enforce 100% code coverage threshold
+  
+A second workflow use [Dart Code Metrics](https://github.com/dart-code-checker/dart-code-metrics) to analyse the code quality and build reports on pull request.
