@@ -289,41 +289,6 @@ void main() {
       });
     });
 
-    group('operators', () {
-      const health = Health(44);
-
-      test('+ increase points by one', () {
-        expect(health + 1, equals(45));
-      });
-
-      test('- decrease points by one', () {
-        expect(health - 1, equals(43));
-      });
-
-      test('> return correct boolean', () {
-        const healthA = Health(2);
-        const healthB = Health(1);
-        expect(healthA > healthB, isTrue);
-        expect(healthB > healthA, isFalse);
-      });
-
-      test('< return correct boolean', () {
-        const healthA = Health(2);
-        const healthB = Health(1);
-        expect(healthA < healthB, isFalse);
-        expect(healthB < healthA, isTrue);
-      });
-
-      test('>= and <= return correct boolean', () {
-        const healthA = Health(1);
-        const healthB = Health(1);
-        expect(healthA <= healthB, isTrue);
-        expect(healthB <= healthA, isTrue);
-        expect(healthA >= healthB, isTrue);
-        expect(healthB >= healthA, isTrue);
-      });
-    });
-
     group('equality', () {
       test('unit are equals', () {
         const attributeA = Health(1);

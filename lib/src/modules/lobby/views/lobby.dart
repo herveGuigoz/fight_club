@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+/// Fight character selection layout.
 class LobbyView extends ConsumerWidget {
+  /// Render dropdown button with all avalaible characters and text button to
+  /// launch a fight.
   const LobbyView({Key? key}) : super(key: key);
-
-  static const routeName = '/lobby';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

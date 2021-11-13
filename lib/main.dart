@@ -23,6 +23,7 @@ Future<void> main() async {
   );
 }
 
+/// Launch app in guarded zone to report errors on console.
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);

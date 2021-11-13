@@ -6,14 +6,15 @@ import 'package:fight_club/src/core/data/random_generator.dart';
 import 'package:fight_club/src/modules/lobby/logic/fight_observer.dart';
 import 'package:flutter/foundation.dart';
 
-/// Manage a the list of 1000 fake characters
+/// Manage a the list of fake characters
 class CharactersController implements FightObserver {
+  /// For testing propose, its allowed to inject intial characters.
   CharactersController([this._state = const []]);
 
   List<Character> _state;
 
-  @visibleForTesting
-  List<Character> get state => _state;
+  /// The current characters list.
+  List<Character> get characters => _state;
 
   /// Create [count] random [Character] in isolate.
   /// If [refresh] is true old characters will be replaced.
@@ -28,6 +29,11 @@ class CharactersController implements FightObserver {
     return _state;
   }
 
+  /// Choose the right opponent for given [Character]
+  ///  - take the closest opponent based on rank value.
+  ///  - if several opponents match, take the opponent with the smallest number
+  ///    of fights with the character.
+  ///  - if several opponents match, take a random opponent within the list.
   Future<Character> findOpponentFor(Character character) async {
     /// List of random characters.
     final characters = await getRandomCharacters();
@@ -79,12 +85,13 @@ class CharactersController implements FightObserver {
     );
   }
 
+  /// Update character within the list.
   void saveCharacter(Character character) {
     _state = _state.replace(character);
   }
 }
 
-extension SortExtension on List<Character> {
+extension on List<Character> {
   /// Create new array of characters with only best elements compared to
   /// [reference].
   List<Character> getClosestOpponents({
@@ -142,8 +149,8 @@ List<T> mergeSortArray<T>(int reference, int Function(T) on, List<T> array) {
   return array;
 }
 
-/// Syntax utility to check if array contains only one item.
-extension IterableExt<T> on List<T> {
+extension on List {
+  /// Syntax utility to check if array contains only one item.
   bool get isUnique => length == 1;
 }
 

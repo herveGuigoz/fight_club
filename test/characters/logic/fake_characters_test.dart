@@ -138,8 +138,8 @@ void main() {
         when(() => fight.didWin(characterA)).thenReturn(true);
 
         controller.didFight(characterA, fight);
-        expect(controller.state[0].fights.isEmpty, isFalse);
-        expect(controller.state[1].fights.isEmpty, isTrue);
+        expect(controller.characters[0].fights.isEmpty, isFalse);
+        expect(controller.characters[1].fights.isEmpty, isTrue);
       });
     });
   });

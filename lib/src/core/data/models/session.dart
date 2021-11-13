@@ -1,13 +1,16 @@
 import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:flutter/foundation.dart';
 
-/// Auth informations
+/// User's informations.
 @immutable
 class Session {
+  /// By default user has no character.
   const Session({this.characters = const []});
 
+  /// Characters created by user (maximum 10).
   final List<Character> characters;
 
+  /// Clone the session with different characters.
   Session copyWith({List<Character>? characters}) {
     return Session(characters: characters ?? this.characters);
   }

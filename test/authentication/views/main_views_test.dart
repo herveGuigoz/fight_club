@@ -3,7 +3,6 @@ import 'package:fight_club/src/core/codecs/codecs.dart';
 import 'package:fight_club/src/core/data/models/character.dart';
 import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:fight_club/src/modules/authentication/authentication.dart';
-import 'package:fight_club/src/modules/authentication/view/onboarding.dart';
 import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:fight_club/src/modules/lobby/lobby.dart';
 import 'package:flutter/material.dart';
