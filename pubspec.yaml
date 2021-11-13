@@ -21,6 +21,7 @@ dependencies:
   uuid: ^3.0.5
 
 dev_dependencies:
+  dart_code_metrics: ^4.6.0
   flutter_test:
     sdk: flutter
   mocktail: ^0.2.0

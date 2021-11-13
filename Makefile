@@ -10,6 +10,10 @@ analyze: ## Run code analyzer
 format: ## Format code
 	flutter format lib/
 
+.PHONY: metrics 
+metrics: ## Run static code analysis 
+	flutter pub run dart_code_metrics:metrics analyze lib
+
 .PHONY: test 
 test: ## Run all unit and widget tests
 	flutter test --coverage --test-randomize-ordering-seed random

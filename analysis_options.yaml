@@ -12,6 +12,9 @@ analyzer:
     - test/.test_coverage.dart
     - lib/generated_plugin_registrant.dart
 
+  plugins:
+    - dart_code_metrics
+
 linter:
   rules:
     - always_declare_return_types
