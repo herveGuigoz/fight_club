@@ -1,8 +1,9 @@
 import 'package:fight_club/src/core/codecs/codecs.dart';
 import 'package:fight_club/src/core/data/models/models.dart';
 
-/// Codec for [Character] model
+/// JsonCodec implementation for Character model
 class CharacterCodec extends JsonCodec<Character> {
+  /// Provide serialization and deserialization processes for [Character].
   const CharacterCodec();
 
   @override

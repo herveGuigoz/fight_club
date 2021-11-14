@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// across hot restarts as well as complete app restarts.
 abstract class HydratedStateNotifier<State> extends StateNotifier<State>
     with HydratedMixin {
+  /// Initialize [state] and populates the internal storage.
   HydratedStateNotifier(State state) : super(state) {
     hydrate();
   }
@@ -245,6 +246,7 @@ class HydratedCyclicError extends HydratedUnsupportedError {
 
 /// Exception thrown if there was no [HydratedStorage] specified.
 class StorageNotFound implements Exception {
+  /// Create new StorageNotFound exception.
   const StorageNotFound();
 
   @override
@@ -258,6 +260,7 @@ class StorageNotFound implements Exception {
 
 /// Reports that an object could not be serialized.
 class HydratedUnsupportedError extends Error {
+  /// Describe wich object that could not be serialized and why.
   HydratedUnsupportedError(this.unsupportedObject, {this.cause});
 
   /// The object that could not be serialized.
@@ -279,6 +282,7 @@ class HydratedUnsupportedError extends Error {
 /// Type which represents objects that do not support json encoding
 @visibleForTesting
 class NIL {
+  /// Should only be used for testing purposes.
   const NIL();
 }
 

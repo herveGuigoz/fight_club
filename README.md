@@ -6,14 +6,14 @@ This application run on Android, Ios and Macos.
 
 ---
 
-## Requirements
+## Requirements 📦
 
 - Dart >= 2.14.0
 - Flutter >= 2.0.0
 
 ---
 
-## Dependencies
+## Dependencies 🛠️
 
 ### [Riverpod](https://github.com/rrousselGit/river_pod)
 
@@ -25,7 +25,7 @@ Popular storage library for Dart application.
 
 ---
 
-## Installation
+## Installation 🚀
 
 ```sh
 flutter pub get && flutter run
@@ -52,7 +52,7 @@ open coverage/index.html
 
 ---
 
-## Continuous Integration
+## Continuous Integration 💚
 
 This project run github actions in order to:
 

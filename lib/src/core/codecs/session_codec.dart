@@ -2,7 +2,9 @@ import 'package:fight_club/src/core/codecs/character_codec.dart';
 import 'package:fight_club/src/core/codecs/codecs.dart';
 import 'package:fight_club/src/core/data/models/models.dart';
 
+/// JsonCodec implementation for Session model
 class SessionCodec extends JsonCodec<Session> {
+  /// Provide serialization and deserialization processes for [Session].
   const SessionCodec();
 
   static const _character = CharacterCodec();

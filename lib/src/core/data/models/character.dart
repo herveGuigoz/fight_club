@@ -1,14 +1,17 @@
-// ignore_for_file: lines_longer_than_80_chars
-
 import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
+/// Character's default skills value
 const kDefaultSkillsPoints = 12;
+
+/// Character's default health value
 const kDefaultHealthPoints = 10;
 
+/// Unique object that can fight.
 @immutable
 class Character extends Model {
+  /// Public constructor with default characteristics.
   Character({
     String? id,
     this.name = 'Anonymous',
@@ -37,10 +40,23 @@ class Character extends Model {
     required this.fights,
   }) : super(id);
 
+  /// The name of this character.
+  /// Must be linked to existing avatar.
   final String name;
+
+  /// Define how the character perfomed during his fights.
+  /// Will be increased after a win and decreased after a loose, but should
+  /// always be greater than one.
   final int level;
+
+  /// Exchange money to increase an attribute.
+  /// Must be incremented by one after a win.
   final int skills;
+
+  /// Collection of Type/Attribute pairs.
   final Map<Type, Attribute> attributes;
+
+  /// The history of [Fight]
   final List<Fight> fights;
 
   /// Shortcut for character.getAttribute<T>()
@@ -57,18 +73,20 @@ class Character extends Model {
 
   /// Retrieve [Attribute] of type [T]
   Attribute getAttribute<T extends Attribute>() {
-    if (!attributes.containsKey(typeOf<T>())) {
+    if (!attributes.containsKey(_typeOf<T>())) {
       throw AttributeNotFoundException<T>();
     }
-    return attributes[typeOf<T>()]!;
+    return attributes[_typeOf<T>()]!;
   }
 
+  /// Sort characters fight history by date and retrieve the last one if any.
   Fight? get lastFight {
     if (fights.isNotEmpty) {
       return (fights..sort((a, b) => a.date.compareTo(b.date))).last;
     }
   }
 
+  /// Find out if the character has lost a fight in the last hour.
   bool didLooseFightInPastHour() {
     final oneHourAgo = DateTime.now().subtract(const Duration(hours: 1));
     final didFight = lastFight?.date.isAfter(oneHourAgo) ?? false;
@@ -92,7 +110,7 @@ class Character extends Model {
       name: name,
       level: level,
       skills: skills + update.skillsCost,
-      attributes: Map.from(attributes)..update(typeOf<T>(), (_) => update),
+      attributes: Map.from(attributes)..update(_typeOf<T>(), (_) => update),
       fights: fights,
     );
   }
@@ -113,11 +131,12 @@ class Character extends Model {
       name: name,
       level: level,
       skills: skills - current.skillsCost,
-      attributes: Map.from(attributes)..update(typeOf<T>(), (_) => update),
+      attributes: Map.from(attributes)..update(_typeOf<T>(), (_) => update),
       fights: fights,
     );
   }
 
+  /// Clone character with different values.
   Character copyWith({
     String? id,
     String? name,
@@ -144,6 +163,7 @@ class Character extends Model {
 
   @override
   String toString() {
+    // ignore: lines_longer_than_80_chars
     return 'Character(name: $name, level: $level, skills: $skills, attributes: ${attributes.values})';
   }
 
@@ -171,9 +191,10 @@ class Character extends Model {
   }
 }
 
-Type typeOf<T>() => T;
-
+/// Thrown when trying to find out an attribute on character that do not exist.
 class AttributeNotFoundException<T extends Attribute> implements Exception {
   @override
   String toString() => 'Undefine attribute of type $T';
 }
+
+Type _typeOf<T>() => T;

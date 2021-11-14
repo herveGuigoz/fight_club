@@ -3,8 +3,11 @@
 import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:meta/meta.dart';
 
+/// Unique object that store round result.
 @immutable
 class Round {
+  /// A fight produce rounds until one of the characters has no more health
+  /// points. The last character who attacked will be the winner.
   const Round({
     required this.id,
     this.diceResult = 0,
@@ -13,14 +16,27 @@ class Round {
     required this.defender,
   });
 
+  /// Index in the rounds list.
   final int id;
+
+  /// The random number returned by the dice.
   final int diceResult;
+
+  /// The computation of health point to substract based on dice's result,
+  /// defender's defense trait and both attacker's attack and attacker's
+  /// magik traits.
   final int damages;
+
+  /// The character who run an attack during this round.
   final Character attacker;
+
+  /// The character who defends during this round.
   final Character defender;
 
+  /// Returns true if the attack caused damage.
   bool get succeed => damages > 0;
 
+  /// Clone this object with different values.
   Round copyWith({
     int? id,
     int? diceResult,

@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+/// Service to generate/pick random values.
 class Random {
   static final _random = math.Random();
 

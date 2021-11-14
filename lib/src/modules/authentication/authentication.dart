@@ -1,3 +1,4 @@
 export 'logic/auth_controller.dart';
 export 'logic/providers.dart';
-export 'view/onboarding.dart';
+export 'views/home.dart';
+export 'views/onboarding.dart';

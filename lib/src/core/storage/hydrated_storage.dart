@@ -25,6 +25,7 @@ abstract class Storage {
 /// Implementation of [Storage] which uses [package:hive](https://pub.dev/packages/hive)
 /// to persist and retrieve state changes from the local device.
 class HydratedStorage implements Storage {
+  /// Initialize [Box]
   HydratedStorage(this._box);
 
   /// Internal instance of [HiveImpl].
@@ -37,6 +38,7 @@ class HydratedStorage implements Storage {
 
   final Box _box;
 
+  /// Path for storage in web applications.
   static final webStorageDirectory = Directory('');
 
   /// Returns an instance of [HydratedStorage].

@@ -6,11 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:theme/theme.dart';
 
+/// Retrieve the character's details
 class CharacterReadView extends ConsumerWidget {
+  /// Render attibutes and fight tab views inside [Scaffold] widget with
+  /// delete icon button.
   const CharacterReadView(this.character, {Key? key}) : super(key: key);
 
+  /// The selected character.
   final Character character;
 
+  /// MaterialPageRoute that will render CharacterReadView.
   static Route<void> route(Character character) {
     return MaterialPageRoute<void>(
       builder: (_) => CharacterReadView(character),
@@ -55,12 +60,16 @@ class CharacterReadView extends ConsumerWidget {
   }
 }
 
+/// Read only attribute's details list view.
 class AttributesLayout extends ConsumerStatefulWidget {
+  /// Render outlined rows for character's level, skills and attributes with
+  /// edit text button that will push [EditCharacterView] on top of the stack.
   const AttributesLayout({
     Key? key,
     required this.character,
   }) : super(key: key);
 
+  /// The selected character.
   final Character character;
 
   @override
@@ -119,12 +128,15 @@ class _AttributesLayoutState extends ConsumerState<AttributesLayout> {
   }
 }
 
+/// Retrieve the list of fights for a character with the result (won/loose)
 class FightsLayout extends StatelessWidget {
+  /// Show ListView of all fights for the given character.
   const FightsLayout({
     Key? key,
     required this.character,
   }) : super(key: key);
 
+  /// The selected character.
   final Character character;
 
   @override
@@ -153,9 +165,12 @@ class FightsLayout extends StatelessWidget {
   }
 }
 
+/// Request confirmation before deleting character from the current session.
 class DeleteCharacterDialog extends StatelessWidget {
+  /// Show AlertDialog with `Cancel` and `Ok` call-to-action buttons.
   const DeleteCharacterDialog({Key? key}) : super(key: key);
 
+  /// Return user's validation to delete a character.
   static Future<bool?> show(BuildContext context) async {
     return showDialog<bool>(
       context: context,

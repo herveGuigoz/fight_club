@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:theme/theme.dart';
 
+/// Retrieve the list of user's characters
 class CharactersListView extends ConsumerWidget {
+  /// Render sliver list with character's avatar, name and level.
   const CharactersListView({Key? key}) : super(key: key);
 
   @override

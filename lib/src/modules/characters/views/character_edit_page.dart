@@ -6,14 +6,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:theme/theme.dart';
 
+/// Callback triggered on form validation
 typedef OnSave = void Function(Character character);
 
-enum Mode { create, update }
+/// Edition mode
+enum Mode {
+  /// Edit avatar and attributes
+  create,
 
-/// Character editor for creation.
+  /// Edit attributes only
+  update,
+}
+
+/// View for character creation.
 class CreateCharacterView extends ConsumerWidget {
+  /// Render [CharacterLayout] inside [Scaffold] widget with [Avatar] selection.
   const CreateCharacterView({Key? key}) : super(key: key);
 
+  /// MaterialPageRoute that will render CreateCharacterView
   static Route<Character?> route() {
     return MaterialPageRoute<Character?>(
       builder: (_) => const CreateCharacterView(),
@@ -40,15 +50,18 @@ class CreateCharacterView extends ConsumerWidget {
   }
 }
 
-/// Editor for character's attribute
+/// View for character edition.
 class EditCharacterView extends ConsumerWidget {
+  /// Render [CharacterLayout] inside [Scaffold] widget.
   const EditCharacterView({
     Key? key,
     required this.character,
   }) : super(key: key);
 
+  /// The character to edit.
   final Character character;
 
+  /// MaterialPageRoute that will render EditCharacterView
   static Route<Character?> route(Character character) {
     return MaterialPageRoute<Character?>(
       builder: (_) => EditCharacterView(character: character),
@@ -70,7 +83,10 @@ class EditCharacterView extends ConsumerWidget {
   }
 }
 
+/// Form to edit or create avatar.
 class CharacterLayout extends ConsumerWidget {
+  /// Render character skill points avalaible and attributes form.
+  /// If [Mode.create], render [Avatar] selection.
   const CharacterLayout({
     Key? key,
     required this.character,
@@ -78,8 +94,13 @@ class CharacterLayout extends ConsumerWidget {
     this.onSave,
   }) : super(key: key);
 
+  /// The character to edit.
   final Character character;
+
+  /// Either create or update mode.
   final Mode mode;
+
+  /// Callback for save button.
   final OnSave? onSave;
 
   static const double _kSpacing = 24;
@@ -116,6 +137,7 @@ class CharacterLayout extends ConsumerWidget {
 
 /// Render character's skills point available
 class Header extends ConsumerWidget {
+  /// Create [Text] with character skill points.
   const Header({Key? key}) : super(key: key);
 
   @override
@@ -128,6 +150,7 @@ class Header extends ConsumerWidget {
 /// Render character's avatar selector.
 /// Only available avatars will be displayed.
 class CharacterAvatar extends ConsumerWidget {
+  /// Create [Row] with [Avatar] in the center and arrows on each side.
   const CharacterAvatar({Key? key}) : super(key: key);
 
   @override
@@ -176,8 +199,10 @@ class CharacterAvatar extends ConsumerWidget {
   }
 }
 
-/// Render list tile of character's attribute for edition.
+/// Component used to edit given character attribute [T]
 class AttributeListTile<T extends Attribute> extends ConsumerWidget {
+  /// Create outlined container with attribute label, attribute points
+  /// and icon buttons.
   const AttributeListTile({Key? key}) : super(key: key);
 
   @override
@@ -233,13 +258,15 @@ class AttributeListTile<T extends Attribute> extends ConsumerWidget {
   }
 }
 
-/// Render text buttons to handle current changes.
+/// Call-to-action buttons.
 class ActionButtons extends ConsumerWidget {
+  /// Create `RESET` and `SAVE` [TextButton]s
   const ActionButtons({
     Key? key,
     this.onSave,
   }) : super(key: key);
 
+  /// Action to perform on save.
   final OnSave? onSave;
 
   @override

@@ -1,14 +1,14 @@
-import 'package:fight_club/src/app.dart';
 import 'package:fight_club/src/core/data/models/character.dart';
 import 'package:fight_club/src/modules/authentication/authentication.dart';
 import 'package:fight_club/src/modules/characters/characters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// View for unauthenticated user.
 class OnboardingView extends ConsumerWidget {
+  /// Render [CharacterLayout] inside [Scaffold] widget to create the first
+  /// character.
   const OnboardingView({Key? key}) : super(key: key);
-
-  static const routeName = '/sign-up';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +22,9 @@ class OnboardingView extends ConsumerWidget {
           character: Character(),
           onSave: (character) {
             ref.read(authProvider.notifier).addNewCharacter(character);
-            Navigator.of(context).pushReplacementNamed(Home.routeName);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute<void>(builder: (_) => const Home()),
+            );
           },
         ),
       ),

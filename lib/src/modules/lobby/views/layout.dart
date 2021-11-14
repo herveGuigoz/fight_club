@@ -4,14 +4,19 @@ import 'package:fight_club/src/core/data/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:theme/theme.dart';
 
+/// Fight's details repport
 class FightResumeLayout extends StatelessWidget {
+  /// Render fight status (won/loose) and all rounds details.
   const FightResumeLayout({
     Key? key,
     required this.character,
     required this.fight,
   }) : super(key: key);
 
+  /// One of the characters who fought.
   final Character character;
+
+  /// The fight informations.
   final Fight fight;
 
   @override
@@ -34,14 +39,20 @@ class FightResumeLayout extends StatelessWidget {
   }
 }
 
+/// Round's details repport
 class RoundListTile extends StatelessWidget {
+  /// Show round details with turn count, dice result, damages and health point
+  /// substracted for both characters.
   const RoundListTile({
     Key? key,
     required this.character,
     required this.round,
   }) : super(key: key);
 
+  /// One of the characters who fought.
   final Character character;
+
+  /// The round details.
   final Round round;
 
   @override

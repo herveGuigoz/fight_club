@@ -1,7 +1,9 @@
 import 'package:fight_club/src/core/codecs/codecs.dart';
 import 'package:fight_club/src/core/data/models/models.dart';
 
+/// JsonCodec implementation for Fight model
 class FightCodec extends JsonCodec<Fight> {
+  /// Provide serialization and deserialization processes for [Fight].
   const FightCodec();
 
   static const _round = RoundCodec();
