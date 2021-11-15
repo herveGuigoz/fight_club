@@ -46,7 +46,6 @@ class AuthController extends AuthService implements FightObserver {
       character.copyWith(
         skills: didWin ? character.skills + 1 : character.skills,
         level: didWin ? character.level + 1 : max(1, character.level - 1),
-        health: kDefaultHealthPoints,
         fights: [...character.fights, fight],
       ),
     );

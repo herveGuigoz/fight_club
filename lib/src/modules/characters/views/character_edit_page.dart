@@ -9,7 +9,7 @@ import 'package:theme/theme.dart';
 /// Callback triggered on form validation
 typedef OnSave = void Function(Character character);
 
-/// Edition mode
+/// Character edition mode
 enum Mode {
   /// Edit avatar and attributes
   create,

@@ -114,7 +114,7 @@ class Dice {
   /// Create a dice roller.
   const Dice();
 
-  /// Generates a random integer between 1 ~ max (inclusive).
+  /// Generates a random integer between 1 and [max] (inclusive).
   int roll(int max) => Random.integer(max + 1, min: 1);
 }
 

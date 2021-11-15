@@ -46,7 +46,7 @@ class Character extends Model {
 
   /// Define how the character perfomed during his fights.
   /// Will be increased after a win and decreased after a loose, but should
-  /// always be greater than one.
+  /// always be equal or greater than one.
   final int level;
 
   /// Exchange money to increase an attribute.
@@ -102,7 +102,7 @@ class Character extends Model {
 
     assert(
       update.points >= 0,
-      'Dont downgrade initial attributes',
+      "It's not allowed to downgrade attribute $T",
     );
 
     return Character._(
@@ -123,7 +123,7 @@ class Character extends Model {
 
     assert(
       skills >= current.skillsCost,
-      'Dont upgrade attribute when missing skills',
+      "It's not allowed to upgrade attribute $T",
     );
 
     return Character._(
