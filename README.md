@@ -9,7 +9,7 @@ This application run on Android, Ios and Macos.
 ## Requirements 📦
 
 - Dart >= 2.14.0
-- Flutter >= 2.0.0
+- Flutter >= 2.5.0
 
 ---
 
