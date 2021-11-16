@@ -14,7 +14,8 @@ class CharactersController implements FightObserver {
   List<Character> _state;
 
   /// The current characters list.
-  List<Character> get characters => _state;
+  @visibleForTesting
+  List<Character> get state => _state;
 
   /// Create [count] random [Character] in isolate.
   /// If [refresh] is true old characters will be replaced.
@@ -35,26 +36,25 @@ class CharactersController implements FightObserver {
   ///    of fights with the character.
   ///  - if several opponents match, take a random opponent within the list.
   Future<Character> findOpponentFor(Character character) async {
-    /// List of random characters.
-    final characters = await getRandomCharacters();
+    /// Get the initial list of random characters.
+    var characters = await getRandomCharacters();
 
-    /// The character has to be free, it must not have loose a fight in the past
-    /// hour.
-    final availableCharacters = characters
-        .where((character) => !character.didLooseFightInPastHour())
-        .toList();
+    /// The characters must be able to create or recieved damages.
+    characters = characters.whoCanWinOrLooseAgainst(character);
 
-    /// If we cant find characters who did not loose, refresh the state with new
-    /// characters.
-    if (availableCharacters.isEmpty) {
+    /// The character must not have loose a fight in the past hour.
+    characters = characters.whoDidNotLoosedInPastHour();
+
+    /// If we cant find characters, refresh the state with new ones.
+    if (characters.isEmpty) {
       await getRandomCharacters(refresh: true);
       return findOpponentFor(character);
     }
 
-    if (availableCharacters.isUnique) return availableCharacters.first;
+    if (characters.isUnique) return characters.first;
 
     // Take the closest opponent based on rank value
-    final closestOpponentByLevel = availableCharacters.getClosestOpponents(
+    final closestOpponentByLevel = characters.getClosestOpponents(
       reference: character.level,
       on: (character) => character.level,
     );
@@ -103,6 +103,21 @@ extension on List<Character> {
     return sortedCharacter
         .takeWhile((character) => on(character) == bestResult)
         .toList();
+  }
+
+  /// Filter the characters who cant create or receive damages against [other]
+  List<Character> whoCanWinOrLooseAgainst(Character other) {
+    return where(
+      (character) {
+        return character<Attack>().points > other<Defense>().points ||
+            other<Attack>().points > character<Defense>().points;
+      },
+    ).toList();
+  }
+
+  /// Filter the characters that lost a fight in the last hour .
+  List<Character> whoDidNotLoosedInPastHour() {
+    return where((character) => !character.didLooseFightInPastHour()).toList();
   }
 }
 
