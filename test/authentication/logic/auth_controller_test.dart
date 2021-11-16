@@ -89,7 +89,7 @@ void main() {
     test('when character won a fight, level and skills are upgrated', () {
       final fight = MockFight();
       final characterA = Character(id: 'A', skills: 0);
-      final characterB = Character(id: 'A', skills: 0, health: 2);
+      final characterB = Character(id: 'A', skills: 0);
       when(() => fight.didWin(characterB)).thenReturn(true);
 
       final session = Session(characters: [characterA, characterB]);
@@ -102,13 +102,12 @@ void main() {
 
       expect(state.first.level, equals(2));
       expect(state.first.skills, equals(1));
-      expect(state.first<Health>().points, equals(kDefaultHealthPoints));
     });
 
     test('when character loss a fight, attribute did not change', () {
       final fight = MockFight();
       final characterA = Character(id: 'A', skills: 0);
-      final characterB = Character(id: 'A', skills: 0, health: 2);
+      final characterB = Character(id: 'A', skills: 0);
       when(() => fight.didWin(characterB)).thenReturn(false);
 
       final session = Session(characters: [characterA, characterB]);
@@ -121,7 +120,6 @@ void main() {
 
       expect(state.first.level, equals(1));
       expect(state.first.skills, equals(0));
-      expect(state.first<Health>().points, equals(kDefaultHealthPoints));
     });
 
     test('Throw CharactersLengthLimitException when exceed 10 characters', () {

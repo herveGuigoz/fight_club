@@ -100,11 +100,6 @@ class Character extends Model {
     final current = getAttribute<T>();
     final update = current.copyWith(points: current.points - 1);
 
-    assert(
-      update.points >= 0,
-      "It's not allowed to downgrade attribute $T",
-    );
-
     return Character._(
       id: id,
       name: name,
@@ -120,11 +115,6 @@ class Character extends Model {
   Character upgrade<T extends Attribute>() {
     final current = getAttribute<T>();
     final update = current.copyWith(points: current.points + 1);
-
-    assert(
-      skills >= current.skillsCost,
-      "It's not allowed to upgrade attribute $T",
-    );
 
     return Character._(
       id: id,
