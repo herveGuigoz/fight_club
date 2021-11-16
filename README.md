@@ -6,14 +6,14 @@ This application run on Android, Ios and Macos.
 
 ---
 
-## Requirements 📦
+## Requirements 🛠️
 
 - Dart >= 2.14.0
 - Flutter >= 2.5.0
 
 ---
 
-## Dependencies 🛠️
+## Dependencies 📦
 
 ### [Riverpod](https://github.com/rrousselGit/river_pod)
 
