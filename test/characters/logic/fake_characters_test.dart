@@ -25,7 +25,7 @@ void main() {
         when(() => fight.date).thenReturn(DateTime.now());
 
         final controller = CharactersController([characterA, characterB]);
-        final theOne = await controller.findOpponentFor(Character());
+        final theOne = await controller.findOpponentFor(Character(attack: 10));
         expect(theOne, equals(characterB));
       });
 
@@ -61,7 +61,7 @@ void main() {
         expect(characterB.didLooseFightInPastHour(), isTrue);
 
         final controller = CharactersController([characterA, characterB]);
-        final theOne = await controller.findOpponentFor(Character());
+        final theOne = await controller.findOpponentFor(Character(attack: 10));
         expect(theOne.id == characterA.id, isFalse);
         expect(theOne.id == characterB.id, isFalse);
       });
@@ -75,12 +75,14 @@ void main() {
           [characterA, characterB, characterC],
         );
 
-        final theOne = await controller.findOpponentFor(Character(level: 21));
+        final theOne = await controller.findOpponentFor(
+          Character(level: 21, attack: 10),
+        );
         expect(theOne, equals(characterB));
       });
 
       test('Take the opponent with the smallest number of fights', () async {
-        final user = Character(level: 10);
+        final user = Character(level: 10, attack: 10);
         final fight = MockFight();
         final characterA = Character(
           id: 'A',
@@ -138,8 +140,8 @@ void main() {
         when(() => fight.didWin(characterA)).thenReturn(true);
 
         controller.didFight(characterA, fight);
-        expect(controller.characters[0].fights.isEmpty, isFalse);
-        expect(controller.characters[1].fights.isEmpty, isTrue);
+        expect(controller.state[0].fights.isEmpty, isFalse);
+        expect(controller.state[1].fights.isEmpty, isTrue);
       });
     });
   });
